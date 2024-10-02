@@ -12,10 +12,6 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 })
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-})
-
 app.use('/api/login', loginRoutes);
 
 app.use('/api/admin', adminRoutes);
