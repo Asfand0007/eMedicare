@@ -5,7 +5,7 @@ const VerifyJWT= (req,res, next)=>{
     const token= req.header('token');
     console.log("token:",token);
     if(!token)
-        return res.status(403).json({msg:"Authorization denied, not an admin"})
+        return res.status(403).json({msg:"Authorization denied, not an admin"});
 
     jwt.verify(token, process.env.JWT_ADMIN_KEY, (err, payload)=>{
         if(err)
