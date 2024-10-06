@@ -1,7 +1,10 @@
 import { useForm } from "react-hook-form";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import "./Login.css";
+import { FaUserCircle, FaLock } from "react-icons/fa";
+import { MdAdminPanelSettings } from "react-icons/md";
+import logo from "../../assets/logo 1.png";
+import Symbol from "../Symbol/symbol";
 
 const Login = () => {
     const {
@@ -9,7 +12,7 @@ const Login = () => {
         handleSubmit,
         formState: { errors }
     } = useForm();
-    const [redirect, setRedirect] = useState(false);
+    const navigate= useNavigate();
     const [error, setError] = useState(null);
 
     const onSubmit = async (data) => {
@@ -30,76 +33,91 @@ const Login = () => {
         console.log(json);
         localStorage.setItem('token', json.token);
         console.log(data.role);
-        setRedirect(true);
+        navigate(`/${data.role}/home`);
     };
 
 
 
     return (
-        redirect ? <Navigate to='/admin' /> :
-            <div className="bg-gray-100 flex md:flex-row flex-col w-screen h-screen">
-                <div className="md:w-1/2 w-screen md:h-full h-1/4 flex flex-col items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
-                    <div className="text-center">
-                        <h1 className="text-5xl font-bold">Welcome to</h1>
-                        <h1 className="text-5xl font-bold mt-2">e-Medicare</h1>
+        <div className="flex md:flex-row flex-col w-screen h-screen">                                                                                                                              {/* (135deg,_#00c6ff,_#0072ff)]                 (135deg,_#2c3e50,_#4ca1af)                  */}
+            <div className=" bg-[#3554a4] md:w-1/2 w-screen md:h-full h-1/4 flex flex-col items-center justify-center text-white">
+                <div className="flex w-9/10 m-4">
+                    <Symbol />
+                    <div className="w-4/5 sm:pl-0 pl-4 md:text-left text-center">
+                        <h1 className="sm:text-5xl text-4xl font-bold">Welcome</h1>
+                        <h1 className="sm:text-2xl text-1xl italic">Connecting You to Quality Healthcare</h1>
                     </div>
                 </div>
-                <div className="bg-white md:w-1/2 w-screen md:h-screen h-3/4 flex items-center justify-center">
-                    <form className="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg" onSubmit={handleSubmit(onSubmit)}>
-                        <div className="mb-6">
-                            <label className="block text-gray-700 font-medium mb-2">Role</label>
-                            <select
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                {...register("role", {
-                                    required: "Please select a role",
-                                })}
-                            >
-                                <option value="">Select user type</option>
-                                <option value="admin">Admin</option>
-                                <option value="doctor">Doctor</option>
-                                <option value="nurse">Nurse</option>
-                            </select>
-                            {errors.role && <p className="text-red-500 text-sm mt-2">{errors.role.message}</p>}
-                        </div>
-
-                        <div className="mb-6">
-                            <label className="block text-gray-700 font-medium mb-2">Username</label>
-                            <input
-                                type="text"
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                {...register("userName", {
-                                    required: "Username is required",
-                                })}
-                            />
-                            {errors.userName && <p className="text-red-500 text-sm mt-2">{errors.userName.message}</p>}
-                        </div>
-
-                        <div className="mb-6">
-                            <label className="block text-gray-700 font-medium mb-2">Password</label>
-                            <input
-                                type="password"
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                {...register("password", {
-                                    required: "Password is required",
-                                })}
-                            />
-                            {errors.password && <p className="text-red-500 text-sm mt-2">{errors.password.message}</p>}
-                        </div>
-
-
-                        {error && <div className="text-red-400 text-center font-medium font m-4">{error}</div>}
-                        <div className="flex justify-between items-center">
-                            <button
-                                type="submit"
-                                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300"
-                            >
-                                Login
-                            </button>
-                        </div>
-                    </form>
-                </div>
             </div>
-    );
+            <div className="md:w-1/2  w-screen md:h-screen flex items-center justify-center">
+                <form className=" p-8 m-5 w-full max-w-lg" onSubmit={handleSubmit(onSubmit)}>
+                    <div className="flex justify-between items-center text-white mb-4">
+                        <img src={logo} alt="Logo" className="w-12" />
+                        <h1 className="text-4xl font-bold text-[#3554a4]"><span className="text-[#ce1f1f]">e</span>-Medicare</h1>
+                    </div>
+                    <div className="mb-6">
+                        <div className="flex flex-row items-center mb-2 gap-2">
+                            <label className="block text-[#3554a4] text-lg font-medium">Role</label>
+                            <MdAdminPanelSettings className="text-[#3554a4] text-2xl" />
+                        </div>
+                        <select
+                            className="w-full p-3 border text-gray-600 border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#3554a4]"
+                            {...register("role", {
+                                required: "Please select a role",
+                            })}
+                        >
+                            <option value="" className="">Select user type</option>
+                            <option value="admin">Admin</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="nurse">Nurse</option>
+                        </select>
+                        {errors.role && <p className="text-red-500 text-base mt-2">{errors.role.message}</p>}
+                    </div>
 
+                    <div className="mb-6">
+                        <div className="flex flex-row items-center mb-2 gap-2">
+                            <label className="block text-[#3554a4] text-lg font-medium">Username</label>
+                            <FaUserCircle className="text-[#3554a4] text-xl" />
+                        </div>
+                        <input
+                            placeholder="User name"
+                            type="text"
+                            className="w-full p-3 border text-gray-600 border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#3554a4]"
+                            {...register("userName", {
+                                required: "Username is required",
+                            })}
+                        />
+                        {errors.userName && <p className="text-red-500 text-base mt-2">{errors.userName.message}</p>}
+                    </div>
+
+                    <div className="mb-6">
+                        <div className="flex flex-row items-center mb-2 gap-2">
+                            <label className="block text-[#3554a4] text-lg font-medium">Password</label>
+                            <FaLock className="text-[#3554a4] text-xl" />
+                        </div>
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            className="w-full p-3 border text-gray-600 border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#3554a4]"
+                            {...register("password", {
+                                required: "Password is required",
+                            })}
+                        />
+                        {errors.password && <p className="text-red-500 text-base mt-2">{errors.password.message}</p>}
+                    </div>
+
+                    {error && <div className="text-red-500 text-center font-medium m-4">{error}</div>}
+                    <div className="flex justify-between items-center">
+                        <button
+                            type="submit"
+                            className="w-full bg-[#3554a4] text-white font-bold py-3 px-4 rounded-sm transition duration-300"
+                        >
+                            Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
 }
 export default Login;

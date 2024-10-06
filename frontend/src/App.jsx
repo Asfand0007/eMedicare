@@ -5,6 +5,7 @@ import Unauthorized from './components/Unauthorized/Unauthorized';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import DoctorForm from './components/Admin/doctorForm';
 import NurseForm from './components/Admin/nurseForm';
+import AdminHome from './components/Admin/adminHome';
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -16,7 +17,7 @@ const ProtectedRoute = ({ role, children }) => {
 
   const decodedToken = jwtDecode(token);
   console.log("Protected route", decodedToken);
-  if (decodedToken.role !== role) {
+  if (!decodedToken.role || decodedToken.role !== role) {
     return <Navigate to="/unauthorized" />;
   }
 
@@ -41,11 +42,15 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: 'addDoctor',
+        path: 'home',
+        element: <AdminHome/>,
+      },
+      {
+        path: 'doctor',
         element: <DoctorForm/>,
       },
       {
-        path: 'addNurse',
+        path: 'nurse',
         element: <NurseForm/>,
       },
       // Add more nested routes as needed
