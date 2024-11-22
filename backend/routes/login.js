@@ -9,7 +9,7 @@ router.post('/', async (req, res) => {
     try {
         const { userName, password, role } = req.body;
         console.log(userName, password, role);
-        const userQuery = await pool.query(`SELECT * FROM ${role}s WHERE name=$1`, [userName]);
+        const userQuery = await pool.query(`SELECT * FROM ${role}s WHERE firstName=$1`, [userName]);
         const user = userQuery.rows[0];
         if (!user) {
             return res.status(401).json({ msg: "Incorrect user" });

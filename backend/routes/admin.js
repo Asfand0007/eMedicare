@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
-const {VerifyJWT, authorizeRoles} = require('../middleware/Auth')
+const {VerifyJWT, authorizeRoles} = require('../middleware/auth')
 const pool = require('../db')
 
 const express = require('express');
