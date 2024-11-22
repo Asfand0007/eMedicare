@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaUserCircle, FaLock } from "react-icons/fa";
 import { MdAdminPanelSettings } from "react-icons/md";
 import logo from "../../assets/logo 1.png";
-import Symbol from "../Symbol/symbol";
+import Symbol from "../Symbol/Symbol";
 
 const Login = () => {
     const {
