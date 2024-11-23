@@ -44,21 +44,42 @@ const DoctorForm = () => {
 
     return (
         <div className="bg-white-100 flex items-center justify-center h-screen">
-          <div className="bg-[#68eab3] shadow-lg rounded-lg p-8 w-full max-w-lg">
+          <div className="bg-blue-500 shadow-lg rounded-lg p-8 w-full max-w-lg">
             <h2 className="text-3xl font-bold text-center mb-6">Doctor Registration</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
-              {/* Name Field */}
-              <div className="mb-6">
-                <label className="block text-gray-700 font-medium mb-2">Name</label>
-                <input
-                  type="text"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  {...register("name", {
-                    required: "Name is required",
-                  })}
-                />
-                {errors.name && <p className="text-red-500 text-sm mt-2">{errors.name.message}</p>}
+              {/* First and Last Name Side by Side */}
+              <div className="mb-6 flex space-x-4">
+                {/* First Name */}
+                <div className="w-1/2">
+                  <label className="block text-gray-700 font-medium mb-2">First Name</label>
+                  <input
+                    type="text"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    {...register("firstName", {
+                      required: "First Name is required",
+                    })}
+                  />
+                  {errors.firstName && (
+                    <p className="text-red-500 text-sm mt-2">{errors.firstName.message}</p>
+                  )}
+                </div>
+                
+                {/* Last Name */}
+                <div className="w-1/2">
+                  <label className="block text-gray-700 font-medium mb-2">Last Name</label>
+                  <input
+                    type="text"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    {...register("lastName", {
+                      required: "Last Name is required",
+                    })}
+                  />
+                  {errors.lastName && (
+                    <p className="text-red-500 text-sm mt-2">{errors.lastName.message}</p>
+                  )}
+                </div>
               </div>
+
       
               {/* Password Field */}
               <div className="mb-6">

@@ -8,6 +8,7 @@ const router = express.Router()
 
 router.post('/register', async (req, res) => {
     const { userName, password } = req.body;
+    console.log(userName,password);
 
     const userQuery = await pool.query(
         "SELECT * FROM admins WHERE name=$1",
@@ -29,12 +30,12 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/addDoctor',VerifyJWT, authorizeRoles('admin'), async (req, res) => {
-    const { userName, password } = req.body;
+    const { firstName, lastName, password } = req.body;
 
     try{
         const userQuery = await pool.query(
-            "SELECT * FROM doctors WHERE name=$1",
-            [userName]
+            "SELECT * FROM doctors WHERE firstname=$1 AND lastname=$2",
+            [firstName, lastName]
         );
 
         if(userQuery.rows.length!=0)
@@ -46,8 +47,8 @@ router.post('/addDoctor',VerifyJWT, authorizeRoles('admin'), async (req, res) =>
         console.log(userName, password);
     
         const newUser = await pool.query(
-            "INSERT INTO doctors (name, password) VALUES ($1, $2) RETURNING *",
-            [userName, bcryptPassword]
+            "INSERT INTO doctors (firstName, lastName, password) VALUES ($1, $2, $3) RETURNING *",
+            [firstName, lastName, bcryptPassword]
         );
         return res.json(newUser.rows[0]);
     }
