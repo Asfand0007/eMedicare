@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Form, useForm } from "react-hook-form";
 import { Navigate } from "react-router-dom";
-
+import FormField from "../Utils/FormField";
+import TimeFormField from "../Utils/TimeFormField";
 const DoctorForm = () => {
     const {
         register,
@@ -44,37 +45,73 @@ const DoctorForm = () => {
 
     return (
         <div className="bg-white-100 flex items-center justify-center h-screen">
-          <div className="bg-[#68eab3] shadow-lg rounded-lg p-8 w-full max-w-lg">
+          <div className="bg-blue-500 shadow-lg rounded-lg p-8 w-full max-w-lg">
             <h2 className="text-3xl font-bold text-center mb-6">Doctor Registration</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
-              {/* Name Field */}
-              <div className="mb-6">
-                <label className="block text-gray-700 font-medium mb-2">Name</label>
-                <input
-                  type="text"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  {...register("name", {
-                    required: "Name is required",
-                  })}
+              {/* First and Last Name Side by Side */}
+              <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <FormField
+                  label="First Name"
+                  name="firstName"
+                  register={register}
+                  errors={errors}
+                  validationRules="First Name is Required"
                 />
-                {errors.name && <p className="text-red-500 text-sm mt-2">{errors.name.message}</p>}
-              </div>
-      
-              {/* Password Field */}
-              <div className="mb-6">
-                <label className="block text-gray-700 font-medium mb-2">Password</label>
-                <input
-                  type="password"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  {...register("password", {
-                    required: "Password is required",
-                    minLength: { value: 6, message: "Password must be at least 6 characters" },
-                  })}
+                <FormField
+                  label="Last Name"
+                  name="lastName"
+                  register={register}
+                  errors={errors}
+                  validationRules="Last Name is Required"
                 />
-                {errors.password && <p className="text-red-500 text-sm mt-2">{errors.password.message}</p>}
               </div>
-      
-              {/* Submit Button */}
+
+              <FormField
+                label="Email"
+                name="email"
+                register={register}
+                errors={errors}
+              />
+              <FormField
+                label="Phone Number"
+                name="phoneNumber"
+                register={register}
+                errors={errors}
+                validationRules="Phone Number is Required"
+              />
+              <FormField
+                label="Speciality"
+                name="speciality"
+                register={register}
+                errors={errors}
+                validationRules="Speciality is Required"
+              />
+             <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <TimeFormField
+                  label="Start Time"
+                  name="startTime"
+                  register={register}
+                  errors={errors}
+                  validationRules="Start Time is Required"
+                />
+                <TimeFormField
+                  label="End Time"
+                  name="endTime"
+                  register={register}
+                  errors={errors}
+                  validationRules="End Time is Required"
+                />
+              </div>
+
+              <FormField
+                label="Password"
+                type="password"
+                name="authPassword"
+                register={register}
+                errors={errors}
+                validationRules="Password is Required"
+              />
+             {/* Submit Button */}
               <div className="flex justify-center">
                 <button
                   type="submit"
