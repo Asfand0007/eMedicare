@@ -1,0 +1,25 @@
+Admin:
+Doctor assignment
+room allocation
+patient history overview
+discharge process( billing and adding to history table)
+medical supplies overview
+patient count, available doctors
+Medicine administring monitor
+Food serving monitor
+View patient history
+
+
+Doctor:
+Medication perscription
+Diagnosis
+Discharge approval
+Diet Nutrition
+View patient History
+
+
+Nurse:
+Dosage administration(Alternative medication + medical supplies)(reminder)
+AI driven care
+Food serving
+

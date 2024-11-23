@@ -27,7 +27,7 @@ const ProtectedRoute = ({ role, children }) => {
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Login />,
+    element: <ProtectedRoute />
   },
   {
     path: '/login',

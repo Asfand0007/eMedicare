@@ -4,44 +4,56 @@ import { Navigate } from "react-router-dom";
 import FormField from "../Utils/FormField";
 import TimeFormField from "../Utils/TimeFormField";
 const DoctorForm = () => {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors }
-    } = useForm();
-    const [redirect, setRedirect] = useState(false);
-    const [error, setError] = useState(null);
-    
-
-    const onSubmit = async (data) => {
-        console.log(data);
-        const token= localStorage.getItem('token');
-        if(!token){
-            setRedirect(true);
-            return;
-        }
-        
-        const response = await fetch("http://localhost:4000/api/admin/addDoctor", {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json',
-                'token': token
-            }
-        })
-        const json = await response.json();
-        if (!response.ok) {
-            setError(json.msg);
-            return;
-        }
-        setError(null);
-        console.log(json);
-        console.log(data.role);
-    };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm();
+  const [redirect, setRedirect] = useState(false);
+  const [error, setError] = useState(null);
+  const [loading, setloading] = useState(false);
 
 
-    if(redirect)
-        return <Navigate to='/login' />;
+  const onSubmit = async (data) => {
+    setloading(true);
+    console.log("data:", data);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setRedirect('/login');
+      return;
+    }
+
+    const response = await fetch("http://localhost:4000/api/admin/addDoctor", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    const json = await response.json();
+    setloading(false);
+    if (response.ok) {
+      reset();
+      setError(null);
+      console.log(json);
+      return;
+    }
+    else if (response.status === 401) {
+      setRedirect('/unauthorized');
+      return;
+    }
+
+    console.log('status:', response.status)
+    console.log(json.msg)
+    setError(json.msg);
+    return;
+  };
+
+
+  if (redirect)
+    return <Navigate to={redirect} />;
 
     return (
         <div className="bg-white-100 flex items-center justify-center h-screen">

@@ -1,10 +1,12 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { ThreeCircles } from "react-loader-spinner";
 import { FaUserCircle, FaLock } from "react-icons/fa";
 import { MdAdminPanelSettings } from "react-icons/md";
 import logo from "../../assets/logo 1.png";
-import Symbol from "../Symbol/Symbol";
+import Symbol from "../Symbol/symbol";
+import { FaS } from "react-icons/fa6";
 
 const Login = () => {
     const {
@@ -14,8 +16,10 @@ const Login = () => {
     } = useForm();
     const navigate= useNavigate();
     const [error, setError] = useState(null);
+  const [loading, setloading] = useState(false);
 
     const onSubmit = async (data) => {
+        setloading(true);
         console.log(data);
         const response = await fetch("http://localhost:4000/api/login", {
             method: "POST",
@@ -25,6 +29,7 @@ const Login = () => {
             }
         })
         const json = await response.json();
+        setloading(false);
         if (!response.ok) {
             setError(json.msg);
             return;
@@ -76,18 +81,18 @@ const Login = () => {
 
                     <div className="mb-6">
                         <div className="flex flex-row items-center mb-2 gap-2">
-                            <label className="block text-[#3554a4] text-lg font-medium">Username</label>
+                            <label className="block text-[#3554a4] text-lg font-medium">firstName</label>
                             <FaUserCircle className="text-[#3554a4] text-xl" />
                         </div>
                         <input
                             placeholder="User name"
                             type="text"
                             className="w-full p-3 border text-gray-600 border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#3554a4]"
-                            {...register("userName", {
-                                required: "Username is required",
+                            {...register("firstName", {
+                                required: "firstName is required",
                             })}
                         />
-                        {errors.userName && <p className="text-red-500 text-base mt-2">{errors.userName.message}</p>}
+                        {errors.firstName && <p className="text-red-500 text-base mt-2">{errors.firstName.message}</p>}
                     </div>
 
                     <div className="mb-6">
@@ -110,9 +115,15 @@ const Login = () => {
                     <div className="flex justify-between items-center">
                         <button
                             type="submit"
-                            className="w-full bg-[#3554a4] text-white font-bold py-3 px-4 rounded-sm transition duration-300"
+                            className="w-full bg-[#3554a4] text-white h-12 font-bold py-3 px-4 rounded-sm transition duration-300"
                         >
-                            Login
+                            {loading?
+                            <div className="flex justify-center ">
+                                <ThreeCircles color={'#ffffff'} loading={loading} height='25' />
+                            </div>
+                            :
+                            <span>Login</span>
+                            }
                         </button>
                     </div>
                 </form>
