@@ -81,7 +81,7 @@ const Login = () => {
 
                     <div className="mb-6">
                         <div className="flex flex-row items-center mb-2 gap-2">
-                            <label className="block text-[#3554a4] text-lg font-medium">firstName</label>
+                            <label className="block text-[#3554a4] text-lg font-medium">User Name</label>
                             <FaUserCircle className="text-[#3554a4] text-xl" />
                         </div>
                         <input

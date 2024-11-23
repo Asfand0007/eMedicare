@@ -1,13 +1,15 @@
 Admin:
+
 Doctor assignment
 room allocation
-patient history overview
-discharge process( billing and adding to history table)
-medical supplies overview
 patient count, available doctors
+medical supplies overview
 Medicine administring monitor
+
 Food serving monitor
 View patient history
+patient history overview
+discharge process( billing and adding to history table)
 
 
 Doctor:

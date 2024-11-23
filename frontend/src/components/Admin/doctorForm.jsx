@@ -56,7 +56,7 @@ const DoctorForm = () => {
     return <Navigate to={redirect} />;
 
     return (
-        <div className="bg-white-100 flex items-center justify-center h-screen">
+        <div className="bg-white-100 mt-48 flex items-center justify-center h-screen">
           <div className="bg-blue-500 shadow-lg rounded-lg p-8 w-full max-w-lg">
             <h2 className="text-3xl font-bold text-center mb-6">Doctor Registration</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -118,7 +118,7 @@ const DoctorForm = () => {
               <FormField
                 label="Password"
                 type="password"
-                name="authPassword"
+                name="password"
                 register={register}
                 errors={errors}
                 validationRules="Password is Required"

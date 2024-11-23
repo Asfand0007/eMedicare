@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
         if (!validPassword) {
             return res.status(401).json({ msg: "Incorrect password" });
         }
-        const accessToken = jwt.sign({ firstName: user.firstname, role: role }, process.env.JWT_ADMIN_KEY, { expiresIn: "1 hr" });
+        const accessToken = jwt.sign({ user: user.employeeid, role: role }, process.env.JWT_ADMIN_KEY, { expiresIn: "1 hr" });
         res.json({'token':accessToken})
 
     } catch (error) {

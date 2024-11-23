@@ -1,23 +1,3 @@
-CREATE TABLE admins(
-    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name VARCHAR(255) NOT NULL, 
-    password VARCHAR(255) NOT NULL 
-);
-
-CREATE TABLE doctors(
-    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name VARCHAR(255) NOT NULL, 
-    password VARCHAR(255) NOT NULL 
-);
-
-CREATE TABLE nurses(
-    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name VARCHAR(255) NOT NULL, 
-    password VARCHAR(255) NOT NULL 
-);
-
-
-
 CREATE SEQUENCE employeeIDGenerator START WITH 1 INCREMENT BY 1;
 
 create table admins (
@@ -51,10 +31,10 @@ create table nurses (
   authPassword text not null
 );
 
-create table room (
+create table rooms (
   roomNumber bigint primary key generated always AS IDENTITY (START WITH 1 INCREMENT BY 1),
   capacity integer not null,
-  occupied boolean default false
+  occupied integer default 0
 );
 
 create table patients (
@@ -74,7 +54,7 @@ CREATE TABLE formula (
     patentedBy TEXT NOT NULL
 );
 
-CREATE TABLE medicine (
+CREATE TABLE medicines (
     medicineName TEXT PRIMARY KEY,
     stock INTEGER NOT NULL,
     formulaName TEXT REFERENCES formula (formulaName)
@@ -90,7 +70,8 @@ create table dosage (
 create table dosageTimes(
   dosageID bigint references dosage(dosageID),
   time time not null,
-  adminitered boolean default (false)
+  adminitered boolean default (false),
+  nurseID bigint references nurses (employeeid),
 );
 
 
