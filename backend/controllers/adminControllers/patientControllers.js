@@ -1,24 +1,79 @@
 const pool = require('../../db');
 
-const getPatients= async(req, res)=>{
-    const userQuery = await pool.query(
-        "SELECT * FROM patients ORDER BY mrid",
-    );
-    res.status(200).json({count: userQuery.rows.length , patients: userQuery.rows});
+const getPatients = async (req, res) => {
+    const { id } = req.params;
+    let condition = '';
+    params = []
+    if (id) {
+        params.push(id);
+        if (isNaN(id)) {
+            condition = " WHERE firstname LIKE ('%' || $1 || '%') OR lastname LIKE ('%' || $1 || '%')";
+        }
+        else {
+            condition = " WHERE mrID=$1";
+        }
+    }
+    try {
+        const userQuery = await pool.query(
+            `SELECT 
+                mrID,
+                firstname || ' ' || lastname AS fullName,
+                gender,
+                dateOfBirth,
+                admissionDate,
+                roomNumber,
+                doctorID,
+                diagnosis
+            FROM patients` + condition + " ORDER BY mrID",
+            params);
+        res.status(200).json({ count: userQuery.rows.length, patients: userQuery.rows });
+    }
+    catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: "Server error" });
+    }
 }
 
-const getPatient= async(req,res)=>{
-    const {id}= req.params
+const getPatient = async (req, res) => {
+    const { id } = req.params
     const userQuery = await pool.query(
-        "SELECT * FROM patients WHERE mrid=$1",
+        `SELECT 
+            mrID,
+            firstname || ' ' || lastname AS fullName,
+            gender,
+            dateOfBirth,
+            admissionDate,
+            roomNumber,
+            doctorID,
+            diagnosis
+        FROM patients 
+        WHERE mrid=$1`,
         [id]
     );
-    
-    if(userQuery.rows.length===0){
-        res.status(404).json({msg: "No patient found"})
+    try {
+        const dosageQuery = await pool.query(
+            `SELECT 
+                d.dosageID,
+                d.dosage_amount,
+                d.formulaName,
+                COUNT(dt.time)
+            FROM  dosage d
+            LEFT JOIN Patients pt ON d.patientMrID = pt.mrID
+            LEFT JOIN dosageTimes dt ON dt.dosageID = d.dosageID
+            WHERE pt.mrID=$1
+            GROUP BY (d.dosageID);`,
+        [id])
+
+        if (userQuery.rows.length === 0) {
+            res.status(404).json({ msg: "No patient found" })
+        }
+        else {
+            res.status(200).json({patient: userQuery.rows[0], dosages: dosageQuery.rows});
+        }
     }
-    else{
-        res.status(200).json(userQuery.rows[0]);
+    catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: "Server error" });
     }
 }
 
@@ -76,7 +131,7 @@ const addPatient = async (req, res) => {
             if (updatedRoom.rows.length === 0) {
                 throw new Error("Room is already at full capacity or does not exist");
             }
-            
+
             await pool.query("COMMIT");
 
             return res.status(201).json(newUser.rows[0]);
@@ -92,8 +147,8 @@ const addPatient = async (req, res) => {
     }
 }
 
-const deletePatient= async (req, res)=>{
-    const {id}= req.params
+const deletePatient = async (req, res) => {
+    const { id } = req.params
 
     try {
         await pool.query("BEGIN");
@@ -102,12 +157,12 @@ const deletePatient= async (req, res)=>{
             "DELETE FROM patients WHERE mrid=$1 RETURNING *",
             [id]
         );
-        
-        
+
+
         if (deletedUser.rows.length === 0) {
             throw new Error("No user found");
         }
-    
+
         const updatedRoom = await pool.query(
             "UPDATE rooms  SET occupied = occupied - 1 WHERE roomNumber = $1 AND occupied >0 RETURNING *",
             [deletedUser.rows[0].roomnumber]
@@ -115,7 +170,7 @@ const deletePatient= async (req, res)=>{
 
         if (updatedRoom.rows.length === 0) {
             throw new Error("No room found");
-        } 
+        }
 
         await pool.query("COMMIT");
         return res.status(200).json(deletedUser.rows[0]);

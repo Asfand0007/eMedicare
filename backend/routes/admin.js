@@ -13,27 +13,33 @@ const router = express.Router();
 router.post('/register', addAdmin);
 
 router.get('/getDoctors', getDoctors);
+router.get('/getDoctors/:id', getDoctors);
 router.get('/getDoctor/:id', getDoctor);
 router.post('/addDoctor', addDoctor);
 
 router.get('/getNurses', getNurses);
+router.get('/getNurses/:id', getNurses);
 router.get('/getNurse/:id', getNurse);
 router.post('/addNurse', addNurse);
 router.delete('/deleteNurse/:id', deleteNurse);
 
 router.get('/getPatients', getPatients);
+router.get('/getPatients/:id', getPatients);
 router.get('/getPatient/:id', getPatient);
 router.post('/addPatient', addPatient);
 router.delete('/deletePatient/:id', deletePatient);
 
 router.get('/getRooms', getRooms);
+router.get('/getRooms/:id', getRooms);
 router.post('/addRoom', addRoom);
 
 router.get('/getMedicines', getMedicines);
+router.get('/getMedicines/:id', getMedicines);
 router.get('/getMedicine/:medicine', getMedicine);
 router.post('/addMedicine', addMedicine);
 
 router.get('/getDosageRecords',getDosageRecords);
+router.get('/getDosageRecords/:id',getDosageRecords);
 
 router.get('/', async (req, res) => {
     try {

@@ -42,6 +42,7 @@ create table patients (
   firstName text not null,
   lastName text not null,
   gender text,
+  diagnosis text,
   dateOfBirth timestamp with time zone,
   admissionDate timestamp with time zone not null,
   roomNumber bigint references room (roomNumber),

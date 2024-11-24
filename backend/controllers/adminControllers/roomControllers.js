@@ -1,9 +1,16 @@
 const pool = require('../../db');
 
 const getRooms= async(req, res)=>{
+    const { id } = req.params;
+    let condition = '';
+    params = []
+    if (id && !isNaN(id)) {
+        params.push(id);
+        condition = " WHERE roomNumber=$1";
+    }
     const roomQuery = await pool.query(
-        "SELECT * FROM rooms ORDER BY roomnumber",
-    );
+        "SELECT * FROM rooms" + condition + " ORDER BY roomnumber",
+    params);
     res.status(200).json({count: roomQuery.rows.length , rooms: roomQuery.rows});
 }
 

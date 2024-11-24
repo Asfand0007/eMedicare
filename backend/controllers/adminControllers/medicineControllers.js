@@ -1,9 +1,21 @@
 const pool = require('../../db');
 
 const getMedicines= async(req, res)=>{
+    const { id } = req.params;
+    let condition = '';
+    params = []
+    if (id) {
+        params.push(id);
+        if (isNaN(id)) {
+            condition = " WHERE medicineName LIKE ('%' || $1 || '%')";
+        }
+        else {
+            condition = " WHERE stock=$1";
+        }
+    }
     const medicineQuery = await pool.query(
-        "SELECT * FROM medicines ORDER BY stock",
-    );
+        "SELECT * FROM medicines" + condition +" ORDER BY stock", 
+    params);
     res.status(200).json({count: medicineQuery.rows.length , medicines: medicineQuery.rows});
 }
 

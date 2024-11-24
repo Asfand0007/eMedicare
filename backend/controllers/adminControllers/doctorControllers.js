@@ -1,26 +1,75 @@
 const bcrypt = require('bcrypt');
 const pool = require('../../db');
 
-const getDoctors= async(req, res)=>{
-    const userQuery = await pool.query(
-        "SELECT * FROM doctors ORDER BY employeeid",
-    );
-    res.status(200).json({count: userQuery.rows.length , doctors: userQuery.rows});
+const getDoctors = async (req, res) => {
+    const { id } = req.params;
+    let condition = '';
+    params = []
+    if (id) {
+        params.push(id);
+        if (isNaN(id)) {
+            condition = " WHERE d.firstname LIKE ('%' || $1 || '%') OR d.lastname LIKE ('%' || $1 || '%')";
+        }
+        else {
+            condition = " WHERE d.employeeid = $1";
+        }
+    }
+    try {
+        const doctorQuery = await pool.query(`
+            SELECT
+                d.employeeid,
+                d.firstname || ' ' || d.lastname AS fullName,
+                d.email,
+                d.phonenumber,
+                d.speciality,
+                d.starttime,
+                d.endtime,
+                count(pt.mrID) AS patientCount
+            FROM
+                doctors d 
+            LEFT JOIN
+                patients pt ON pt.doctorID=d.employeeID`
+            + condition +
+            ` GROUP BY (d.employeeid);`, params
+        );
+        res.status(200).json({count: doctorQuery.rows.length, doctors: doctorQuerys.rows});
+    }
+    catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: "Server error" });
+    }
 }
 
-const getDoctor= async(req,res)=>{
-    const {id}= req.params
-    const userQuery = await pool.query(
-        "SELECT * FROM doctors WHERE employeeid=$1",
-        [id]
-    );
-    
-    if(userQuery.rows.length===0){
-        res.status(404).json({msg: "No doctor found"})
-    }
-    else{
-        res.status(200).json(userQuery.rows[0]);
-    }
+const getDoctor = async (req, res) => {
+    const { id } = req.params;
+    const doctorQuery = await pool.query(
+        `SELECT
+            employeeid,
+            firstname || ' ' || lastname AS fullName,
+            email,
+            phonenumber,
+            speciality,
+            starttime,
+            endtime
+        FROM
+            doctors WHERE employeeid= $1;`,
+        [id]);
+
+    const patientQuery = await pool.query(
+        `SELECT
+            pt.mrid,
+            pt.firstname || ' ' || pt.lastname AS fullName,
+            pt.gender,
+            pt.diagnosis,
+            pt.admissionDate,
+            pt.roomNumber
+        FROM
+            Patients pt
+        JOIN doctors d ON pt.doctorID= d.employeeID
+        WHERE d.employeeID=$1;`,
+    [id])
+
+    res.status(200).json({doctor:doctorQuery.rows[0], patients:patientQuery.rows});
 }
 
 
@@ -59,7 +108,7 @@ const addDoctor = async (req, res) => {
     }
 }
 
-module.exports={
+module.exports = {
     getDoctors,
     getDoctor,
     addDoctor

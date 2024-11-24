@@ -2,16 +2,45 @@ const bcrypt = require('bcrypt');
 const pool = require('../../db');
 
 const getNurses= async(req, res)=>{
-    const userQuery = await pool.query(
-        "SELECT * FROM nurses ORDER BY employeeid",
-    );
-    res.status(200).json({count: userQuery.rows.length , nurses: userQuery.rows});
+    const { id } = req.params;
+    let condition = '';
+    params = []
+    if (id) {
+        params.push(id);
+        if (isNaN(id)) {
+            condition = " WHERE firstname LIKE ('%' || $1 || '%') OR lastname LIKE ('%' || $1 || '%')";
+        }
+        else {
+            condition = " WHERE employeeID=$1";
+        }
+    }
+    const nurseQuery = await pool.query(
+        `SELECT 
+            employeeid,
+            firstname || ' ' || lastname AS fullName,
+            email,
+            phonenumber,
+            starttime,
+            endtime
+        FROM nurses `
+         + condition +
+         " ORDER BY employeeid",
+    params);
+    res.status(200).json({count: nurseQuery.rows.length , nurses: nurseQuery.rows});
 }
 
 const getNurse= async(req,res)=>{
     const {id}= req.params
     const userQuery = await pool.query(
-        "SELECT * FROM nurses WHERE employeeid=$1",
+        `SELECT 
+            employeeid,
+            firstname || ' ' || lastname AS fullName,
+            email,
+            phonenumber,
+            starttime,
+            endtime
+        FROM nurses
+        WHERE employeeid=$1`,
         [id]
     );
     
