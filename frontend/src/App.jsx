@@ -3,9 +3,8 @@ import {jwtDecode} from 'jwt-decode';
 import Login from './components/Login/Login';
 import Unauthorized from './components/Unauthorized/Unauthorized';
 import AdminDashboard from './components/Admin/AdminDashboard';
-import DoctorForm from './components/Admin/doctorForm';
-import NurseForm from './components/Admin/nurseForm';
-import AdminHome from './components/Admin/adminHome';
+import DoctorsRecords from './components/Admin/pages/DoctorsRecords';
+import PatientsRecords from './components/Admin/pages/PatientsRecords';
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -27,7 +26,7 @@ const ProtectedRoute = ({ role, children }) => {
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <ProtectedRoute />
+    element: <Login />
   },
   {
     path: '/login',
@@ -42,16 +41,12 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: 'home',
-        element: <AdminHome/>,
+        path: 'doctors',
+        element: <DoctorsRecords/>,
       },
       {
-        path: 'doctor',
-        element: <DoctorForm/>,
-      },
-      {
-        path: 'nurse',
-        element: <NurseForm/>,
+        path: 'patients',
+        element: <PatientsRecords/>,
       },
       // Add more nested routes as needed
     ],

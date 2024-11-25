@@ -16,7 +16,7 @@ const Login = () => {
     } = useForm();
     const navigate= useNavigate();
     const [error, setError] = useState(null);
-  const [loading, setloading] = useState(false);
+    const [loading, setloading] = useState(false);
 
     const onSubmit = async (data) => {
         setloading(true);
@@ -38,7 +38,7 @@ const Login = () => {
         console.log(json);
         localStorage.setItem('token', json.token);
         console.log(data.role);
-        navigate(`/${data.role}/home`);
+        navigate(`/${data.role}/patients`);
     };
 
 

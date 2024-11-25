@@ -5,15 +5,8 @@ const AdminDashboard = () => {
     return (
         <>
             <Navbar />
-            {/* <div className="min-h-screen  flex mt-16 flex-col items-center">
-            <div className="bg-white shadow-lg rounded-lg p-8 mt-10 w-full max-w-4xl">
-            <div className="border-t border-gray-200 mt-6 pt-6">
+            <div className="bg-red-300 h-[72px]"></div>
             <Outlet />
-            </div>
-            </div>
-            </div> */}
-            <Outlet />
-
         </>
     );
 }

@@ -64,15 +64,15 @@ CREATE TABLE medicines (
 create table dosage (
   dosageID bigint primary key generated always as identity,
   dosage_amount text,
-  patientmrID bigint references patient (mrID),
-  formulaName text references formula (formulaName)
+  patientmrID bigint references patients (mrID) ON DELETE CASCADE,
+  formulaName text
 );
 
 create table dosageTimes(
-  dosageID bigint references dosage(dosageID),
+  dosageID bigint references dosage(dosageID) ON DELETE CASCADE,
   time time not null,
-  adminitered boolean default (false),
-  nurseID bigint references nurses (employeeid),
+  administered boolean default (false),
+  nurseID bigint references nurses (employeeid)
 );
 
 

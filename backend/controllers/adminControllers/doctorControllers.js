@@ -32,7 +32,7 @@ const getDoctors = async (req, res) => {
             + condition +
             ` GROUP BY (d.employeeid);`, params
         );
-        res.status(200).json({count: doctorQuery.rows.length, doctors: doctorQuerys.rows});
+        res.status(200).json({count: doctorQuery.rows.length, doctors: doctorQuery.rows});
     }
     catch (error) {
         console.error(error.message);
