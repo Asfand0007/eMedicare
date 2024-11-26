@@ -55,7 +55,6 @@ const getNurse= async(req,res)=>{
 const addNurse= async (req, res) => {
     const { firstName, lastName, email, phoneNumber, speciality, startTime, endTime, password } = req.body;
     const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-
     if (!timeRegex.test(startTime) || !timeRegex.test(endTime)) {
         console.log("time error");
         return res.status(400).json({ msg: "Invalid time format. Use HH:MM." });

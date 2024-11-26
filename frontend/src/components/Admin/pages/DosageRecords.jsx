@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DoctorsRow from "../components/doctorsComponents/DoctorsRow";
+import DosagesRow from "../components/dosagesComponents/DosagesRow";
 import SearchBar from "../../shared/SearchBar";
-import DoctorForm from "../components/doctorsComponents/DoctorForm";
-import DoctorCard from "../components/doctorsComponents/DoctorCard";
 
 
-const DoctorsRecords = () => {
-    const [doctors, setDoctors] = useState(null);
-    const [doctorCount, setDoctorCount] = useState(0);
-    const [cardDoctor, setCardDoctor]= useState(null);
+const DosagesRecords = () => {
+    const [dosages, setDosages] = useState(null);
+    const [dosageCount, setDosageCount] = useState(0);
     const [searchValue, setSearchValue] = useState("");
     const navigate = useNavigate();
     useEffect(() => {
@@ -20,7 +17,7 @@ const DoctorsRecords = () => {
             }
             
             try {
-                const response = await fetch("http://localhost:4000/api/admin/getDoctors/" + searchValue, {
+                const response = await fetch("http://localhost:4000/api/admin/getDosageRecords/" + searchValue, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -31,9 +28,8 @@ const DoctorsRecords = () => {
                 const json = await response.json();
                 
                 if (response.ok) {
-                    setDoctors(json.doctors);
-                    setDoctorCount(json.count);
-                    setCardDoctor(null);
+                    setDosages(json.dosages);
+                    setDosageCount(json.count);
                 } else if (response.status === 401) {
                     return navigate("/unauthorized");
                 }
@@ -46,7 +42,7 @@ const DoctorsRecords = () => {
         };
 
         fetchData();
-    }, [doctorCount, searchValue]);
+    }, [dosageCount, searchValue]);
 
     return (
         <>
@@ -55,26 +51,21 @@ const DoctorsRecords = () => {
                     <SearchBar setSearchValue={setSearchValue} />
                 </div>
                 <div className="flex sm:ml-auto ml-0 my-2">
-                    <div className="focus:outline-none text-white bg-[#1aac5c] font-medium rounded-lg text-sm px-2.5 py-2.5 me-2">Doctors: {doctorCount}</div>
-                    <DoctorForm doctorCount={doctorCount} setDoctorCount={setDoctorCount}/>
+                    <div className="focus:outline-none text-white bg-[#1aac5c] font-medium rounded-lg text-sm px-2.5 py-2.5 me-2">Dosages: {dosageCount}</div>
                 </div>
             </div>
-            <div className="flex sm:flex-row flex-col-reverse">
-                <div className="sm:w-[70%] w-[100%]">
-                    {doctors && doctors.map((doctor) => (
-                        <span key={doctor.employeeid} className='cursor-pointer' onClick={() => setCardDoctor(doctor)}>
-                            <DoctorsRow key={doctor.employeeid} doctor={doctor} doctorCount={doctorCount} setDoctorCount={setDoctorCount} />
+            <div>
+                <div className="sm:w-[70%] mx-auto w-[100%]">
+                    {dosages && dosages.map((dosage,index) => (
+                        <span key={index}>
+                            <DosagesRow key={index} dosage={dosage} />
                         </span>
                     ))}
                 </div>
-                <div className="mx-auto">
-                    {cardDoctor && <DoctorCard doctorID={cardDoctor.employeeid} setCardDoctor={setCardDoctor} setDoctorCount={setDoctorCount} doctorCount={doctorCount}/>}
-                </div>
-         
             </div>
         </>
     );
 }
 
 
-export default DoctorsRecords;
+export default DosagesRecords;

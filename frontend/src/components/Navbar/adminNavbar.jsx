@@ -21,6 +21,8 @@ const Navbar = () => {
         { path: "/admin/patients", label: "Patients" },
         { path: "/admin/doctors", label: "Doctors" },
         { path: "/admin/nurses", label: "Nurses" },
+        { path: "/admin/medicines", label: "Medicines" },
+        { path: "/admin/dosages", label: "Dosages" },
       ];      
 
 
@@ -42,7 +44,7 @@ const Navbar = () => {
                     </button>
                 </div>
                 <div className={`items-center justify-between ${isCollapsed ? 'block' : 'hidden'} w-full md:flex md:w-auto md:order-1`} id="navbar-sticky">
-                    <ul className="flex flex-col p-4 mt-4 font-medium text-white border border-gray-100 bg-gray-800 rounded-lg md:items-center md:space-x-8 md:flex-row md:p-0 md:mt-0 md:border-0 md:bg-[#3554a4]">
+                    <ul className="flex flex-col p-4 mt-4 font-medium text-white border border-gray-100 bg-gray-800 rounded-lg md:items-center lg:space-x-8 md:space-x-2 md:flex-row md:p-0 md:mt-0 md:border-0 md:bg-[#3554a4]">
                         {navItems.map((item) => (
                             <li key={item.path}>
                                 <NavLink

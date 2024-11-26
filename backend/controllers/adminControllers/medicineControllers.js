@@ -19,6 +19,12 @@ const getMedicines= async(req, res)=>{
     res.status(200).json({count: medicineQuery.rows.length , medicines: medicineQuery.rows});
 }
 
+const getFormula=async(req, res)=>{
+    const formulaQuery = await pool.query(
+        "SELECT * FROM formula ORDER by formulaName");
+    res.status(200).json(formulaQuery.rows);
+}
+
 const getMedicine= async(req,res)=>{
     const {medicine}= req.params
     const medicineQuery = await pool.query(
@@ -26,11 +32,20 @@ const getMedicine= async(req,res)=>{
         [medicine]
     );
     
+    const dosageQuery= await pool.query(
+            `SELECT 
+                d.dosageid,
+                d.patientmrid
+            FROM medicines md 
+            JOIN dosage d ON d.formulaName=md.formulaName
+            WHERE medicineName=$1;`
+        ,[medicine]    
+    )
     if(medicineQuery.rows.length===0){
         res.status(404).json({msg: "No medicine found"})
     }
     else{
-        res.status(200).json(medicineQuery.rows[0]);
+        res.status(200).json({medicine:medicineQuery.rows[0], dosages:dosageQuery.rows});
     }
 }
 
@@ -60,6 +75,7 @@ const addMedicine = async (req, res) => {
 
 module.exports={
     getMedicines,
+    getFormula,
     getMedicine,
     addMedicine
 }

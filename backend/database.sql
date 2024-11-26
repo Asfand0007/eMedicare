@@ -72,7 +72,7 @@ create table dosageTimes(
   dosageID bigint references dosage(dosageID) ON DELETE CASCADE,
   time time not null,
   administered boolean default (false),
-  nurseID bigint references nurses (employeeid)
+  nurseID bigint references nurses (employeeid) ON DELETE SET NULL
 );
 
 

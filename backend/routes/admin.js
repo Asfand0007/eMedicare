@@ -5,7 +5,7 @@ const { getNurses, getNurse, addNurse, deleteNurse } = require('../controllers/a
 const { addAdmin } = require('../controllers/adminControllers/adminControllers');
 const { getPatients, getPatient, addPatient, deletePatient } = require('../controllers/adminControllers/patientControllers');
 const { getRooms, getAvailableRooms, addRoom } = require('../controllers/adminControllers/roomControllers');
-const { getMedicines, getMedicine, addMedicine } = require('../controllers/adminControllers/medicineControllers');
+const { getMedicines, getFormula, getMedicine, addMedicine } = require('../controllers/adminControllers/medicineControllers');
 const {getDosageRecords}= require('../controllers/adminControllers/dosageControllers');
 
 const router = express.Router();
@@ -37,6 +37,7 @@ router.post('/addRoom', addRoom);
 router.get('/getMedicines', getMedicines);
 router.get('/getMedicines/:id', getMedicines);
 router.get('/getMedicine/:medicine', getMedicine);
+router.get('/getFormula', getFormula);
 router.post('/addMedicine', addMedicine);
 
 router.get('/getDosageRecords',getDosageRecords);

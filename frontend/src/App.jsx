@@ -5,6 +5,9 @@ import Unauthorized from './components/Unauthorized/Unauthorized';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import DoctorsRecords from './components/Admin/pages/DoctorsRecords';
 import PatientsRecords from './components/Admin/pages/PatientsRecords';
+import NursesRecords from './components/Admin/pages/NursesRecords';
+import MedicinesRecords from './components/Admin/pages/MedicinesRecords';
+import DosagesRecords from './components/Admin/pages/DosageRecords';
 import { ToastContainer} from 'react-toastify';
 
 
@@ -49,6 +52,18 @@ const router = createBrowserRouter([
       {
         path: 'patients',
         element: <PatientsRecords/>,
+      },
+      {
+        path: 'nurses',
+        element: <NursesRecords/>,
+      },
+      {
+        path: 'medicines',
+        element: <MedicinesRecords/>,
+      },
+      {
+        path: 'dosages',
+        element: <DosagesRecords/>,
       },
       // Add more nested routes as needed
     ],

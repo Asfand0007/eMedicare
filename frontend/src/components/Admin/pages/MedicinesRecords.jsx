@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DoctorsRow from "../components/doctorsComponents/DoctorsRow";
+import MedicinesRow from "../components/medicinesComponents/MedicinesRow";
 import SearchBar from "../../shared/SearchBar";
-import DoctorForm from "../components/doctorsComponents/DoctorForm";
-import DoctorCard from "../components/doctorsComponents/DoctorCard";
+import MedicineForm from "../components/medicinesComponents/MedicineForm";
+import MedicineCard from "../components/medicinesComponents/MedicineCard";
 
 
-const DoctorsRecords = () => {
-    const [doctors, setDoctors] = useState(null);
-    const [doctorCount, setDoctorCount] = useState(0);
-    const [cardDoctor, setCardDoctor]= useState(null);
+const MedicinesRecords = () => {
+    const [medicines, setMedicines] = useState(null);
+    const [medicineCount, setMedicineCount] = useState(0);
+    const [cardMedicine, setCardMedicine]= useState(null);
     const [searchValue, setSearchValue] = useState("");
     const navigate = useNavigate();
     useEffect(() => {
@@ -20,7 +20,7 @@ const DoctorsRecords = () => {
             }
             
             try {
-                const response = await fetch("http://localhost:4000/api/admin/getDoctors/" + searchValue, {
+                const response = await fetch("http://localhost:4000/api/admin/getMedicines/" + searchValue, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -31,9 +31,9 @@ const DoctorsRecords = () => {
                 const json = await response.json();
                 
                 if (response.ok) {
-                    setDoctors(json.doctors);
-                    setDoctorCount(json.count);
-                    setCardDoctor(null);
+                    setMedicines(json.medicines);
+                    setMedicineCount(json.count);
+                    setCardMedicine(null);
                 } else if (response.status === 401) {
                     return navigate("/unauthorized");
                 }
@@ -46,7 +46,7 @@ const DoctorsRecords = () => {
         };
 
         fetchData();
-    }, [doctorCount, searchValue]);
+    }, [medicineCount, searchValue]);
 
     return (
         <>
@@ -55,20 +55,20 @@ const DoctorsRecords = () => {
                     <SearchBar setSearchValue={setSearchValue} />
                 </div>
                 <div className="flex sm:ml-auto ml-0 my-2">
-                    <div className="focus:outline-none text-white bg-[#1aac5c] font-medium rounded-lg text-sm px-2.5 py-2.5 me-2">Doctors: {doctorCount}</div>
-                    <DoctorForm doctorCount={doctorCount} setDoctorCount={setDoctorCount}/>
+                    <div className="focus:outline-none text-white bg-[#1aac5c] font-medium rounded-lg text-sm px-2.5 py-2.5 me-2">Medicines: {medicineCount}</div>
+                    <MedicineForm medicineCount={medicineCount} setMedicineCount={setMedicineCount}/>
                 </div>
             </div>
             <div className="flex sm:flex-row flex-col-reverse">
                 <div className="sm:w-[70%] w-[100%]">
-                    {doctors && doctors.map((doctor) => (
-                        <span key={doctor.employeeid} className='cursor-pointer' onClick={() => setCardDoctor(doctor)}>
-                            <DoctorsRow key={doctor.employeeid} doctor={doctor} doctorCount={doctorCount} setDoctorCount={setDoctorCount} />
+                    {medicines && medicines.map((medicine) => (
+                        <span key={medicine.medicinename} className='cursor-pointer' onClick={() => setCardMedicine(medicine)}>
+                            <MedicinesRow key={medicine.medicinename} medicine={medicine} medicineCount={medicineCount} setMedicineCount={setMedicineCount} />
                         </span>
                     ))}
                 </div>
                 <div className="mx-auto">
-                    {cardDoctor && <DoctorCard doctorID={cardDoctor.employeeid} setCardDoctor={setCardDoctor} setDoctorCount={setDoctorCount} doctorCount={doctorCount}/>}
+                    {cardMedicine && <MedicineCard medicineName={cardMedicine.medicinename} setCardMedicine={setCardMedicine} setMedicineCount={setMedicineCount} medicineCount={medicineCount}/>}
                 </div>
          
             </div>
@@ -77,4 +77,4 @@ const DoctorsRecords = () => {
 }
 
 
-export default DoctorsRecords;
+export default MedicinesRecords;
