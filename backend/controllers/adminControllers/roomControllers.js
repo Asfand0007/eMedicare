@@ -1,6 +1,6 @@
 const pool = require('../../db');
 
-const getRooms= async(req, res)=>{
+const getRooms = async (req, res) => {
     const { id } = req.params;
     let condition = '';
     params = []
@@ -10,11 +10,16 @@ const getRooms= async(req, res)=>{
     }
     const roomQuery = await pool.query(
         "SELECT * FROM rooms" + condition + " ORDER BY roomnumber",
-    params);
-    res.status(200).json({count: roomQuery.rows.length , rooms: roomQuery.rows});
+        params);
+    res.status(200).json({ count: roomQuery.rows.length, rooms: roomQuery.rows });
 }
 
-const addRoom= async (req,res)=>{
+const getAvailableRooms = async (req, res) => {
+    const roomQuery = await pool.query("SELECT * FROM rooms WHERE capacity > occupied ORDER BY roomnumber",);
+    res.status(200).json({ count: roomQuery.rows.length, rooms: roomQuery.rows });
+}
+
+const addRoom = async (req, res) => {
     const { capacity } = req.body;
     try {
         const newUser = await pool.query(
@@ -29,7 +34,8 @@ const addRoom= async (req,res)=>{
     }
 }
 
-module.exports={
+module.exports = {
     getRooms,
+    getAvailableRooms,
     addRoom
 };

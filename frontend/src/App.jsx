@@ -5,6 +5,8 @@ import Unauthorized from './components/Unauthorized/Unauthorized';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import DoctorsRecords from './components/Admin/pages/DoctorsRecords';
 import PatientsRecords from './components/Admin/pages/PatientsRecords';
+import { ToastContainer} from 'react-toastify';
+
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -63,6 +65,7 @@ export default function App() {
   return (
     <>
       <RouterProvider router={router} />
+      <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" transition:Bounce/>
     </>
   );
 }

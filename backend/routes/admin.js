@@ -4,7 +4,7 @@ const { getDoctors, getDoctor, addDoctor } = require('../controllers/adminContro
 const { getNurses, getNurse, addNurse, deleteNurse } = require('../controllers/adminControllers/nurseControllers');
 const { addAdmin } = require('../controllers/adminControllers/adminControllers');
 const { getPatients, getPatient, addPatient, deletePatient } = require('../controllers/adminControllers/patientControllers');
-const { getRooms, addRoom } = require('../controllers/adminControllers/roomControllers');
+const { getRooms, getAvailableRooms, addRoom } = require('../controllers/adminControllers/roomControllers');
 const { getMedicines, getMedicine, addMedicine } = require('../controllers/adminControllers/medicineControllers');
 const {getDosageRecords}= require('../controllers/adminControllers/dosageControllers');
 
@@ -31,6 +31,7 @@ router.delete('/deletePatient/:id', deletePatient);
 
 router.get('/getRooms', getRooms);
 router.get('/getRooms/:id', getRooms);
+router.get('/getAvailableRooms', getAvailableRooms);
 router.post('/addRoom', addRoom);
 
 router.get('/getMedicines', getMedicines);

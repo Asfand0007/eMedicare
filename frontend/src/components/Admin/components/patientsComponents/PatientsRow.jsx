@@ -1,4 +1,11 @@
 import { MdDelete } from "react-icons/md";
+import {toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const showToastMessage = () => {
+    toast.success("Patient Deleted!");
+};
+
 
 const PatientsRow = ({ patient,patientCount, setPatientCount }) => {
     const handleDelete = async () => {
@@ -18,7 +25,7 @@ const PatientsRow = ({ patient,patientCount, setPatientCount }) => {
             const json = await response.json();
             if (response.ok) {
                 setPatientCount(patientCount-1);
-                //add toast later
+                showToastMessage();
             } else if (response.status === 401) {
                 localStorage.removeItem("token");
                 return navigate("/unauthorized");

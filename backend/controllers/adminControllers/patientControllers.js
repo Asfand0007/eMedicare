@@ -78,7 +78,7 @@ const getPatient = async (req, res) => {
 }
 
 const addPatient = async (req, res) => {
-    const { firstName, lastName, gender, dateOfBirth, roomNumber, doctorID } = req.body;
+    const { firstName, lastName, gender, dateOfBirth, roomNumber, doctorID, diagnosis } = req.body;
     //add time format check according to frontend
     if (isNaN(new Date(dateOfBirth))) {
         return res.status(400).json({ msg: "Invalid date format. Use 'YYYY-MM-DD'." });
@@ -119,8 +119,8 @@ const addPatient = async (req, res) => {
             await pool.query("BEGIN");
 
             const newUser = await pool.query(
-                "INSERT INTO patients (firstName, lastName, gender, dateOfBirth, admissionDate, roomNumber, doctorID, adminID ) VALUES ($1, $2, $3, $4::date, $5::date, $6, $7, $8) RETURNING *",
-                [firstName, lastName, gender, dateOfBirth, (new Date().toISOString().slice(0, 10)), roomNumber, doctorID, req.userID]
+                "INSERT INTO patients (firstName, lastName, gender, dateOfBirth, admissionDate, roomNumber, doctorID, adminID, diagnosis ) VALUES ($1, $2, $3, $4::date, $5::date, $6, $7, $8, $9) RETURNING *",
+                [firstName, lastName, gender, dateOfBirth, (new Date().toISOString().slice(0, 10)), roomNumber, doctorID, req.userID, diagnosis]
             );
 
             const updatedRoom = await pool.query(

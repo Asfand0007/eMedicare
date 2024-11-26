@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PatientsRow from "../../shared/patientsRow";
+import PatientsRow from "../components/patientsComponents/PatientsRow";
 import SearchBar from "../../shared/SearchBar";
-import PatientForm from "../components/PatientForm";
-import PatientCard from "../components/PatientCard";
+import PatientForm from "../components/patientsComponents/PatientForm";
+import PatientCard from "../components/patientsComponents/PatientCard";
+
 
 
 const PatientsRecords = () => {
@@ -56,7 +57,7 @@ const PatientsRecords = () => {
                 </div>
                 <div className="flex sm:ml-auto ml-0 my-2">
                     <div className="focus:outline-none text-white bg-[#1aac5c] font-medium rounded-lg text-sm px-2.5 py-2.5 me-2">Patients: {patientCount}</div>
-                    <PatientForm />
+                    <PatientForm patientCount={patientCount} setPatientCount={setPatientCount}/>
                 </div>
             </div>
             <div className="flex sm:flex-row flex-col-reverse">
@@ -70,6 +71,7 @@ const PatientsRecords = () => {
                 <div className="mx-auto">
                     {cardPatient && <PatientCard patientID={cardPatient.mrid} setCardPatient={setCardPatient} setPatientCount={setPatientCount} patientCount={patientCount}/>}
                 </div>
+         
             </div>
         </>
     );

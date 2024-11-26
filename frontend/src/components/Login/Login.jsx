@@ -6,7 +6,6 @@ import { FaUserCircle, FaLock } from "react-icons/fa";
 import { MdAdminPanelSettings } from "react-icons/md";
 import logo from "../../assets/logo 1.png";
 import Symbol from "../Symbol/symbol";
-import { FaS } from "react-icons/fa6";
 
 const Login = () => {
     const {
