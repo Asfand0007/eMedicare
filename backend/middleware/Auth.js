@@ -3,29 +3,28 @@ if (process.env.NODE_ENV !== 'production') {
 }
 const jwt= require('jsonwebtoken')
 
-const VerifyJWT= (req,res, next)=>{
-    const token= req.header('token');
-    console.log("token:",token);
-    if(!token)
-        return res.status(403).json({msg:"Authorization denied, not an admin"});
+const VerifyJWT = (req, res, next) => {
+  const authHeader = req.header('Authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ msg: "Unauthorized: Token missing or invalid" });
+  }
 
-    jwt.verify(token, process.env.JWT_ADMIN_KEY, (err, payload)=>{
-        if(err)
-            return res.status(403).json({msg:"Authorization denied, not an admin"});
-        
-        req.userID= payload.user;
-        req.role= payload.role;
-        console.log("payload.role:", payload.role);
-        next();
-    })
-}
+  const token = authHeader.split(' ')[1]; // Extract token after 'Bearer'
+  jwt.verify(token, process.env.JWT_ADMIN_KEY, (err, payload) => {
+      if (err) {
+        console.log(err);
+        return res.status(401).json({ msg: "Unauthorized: Token verification failed" });
+      }
+      req.userID = payload.user;
+      req.role = payload.role;
+      next();
+  });
+};
 
 const authorizeRoles = (...roles) => {
     return (req, res, next) => {
-      console.log("authorizeRoles:", roles);
-      console.log("req.role:",req.role );
       if (!roles.includes(req.role)) {
-        return res.status(403).json({ message: 'Access Denied' });
+        return res.status(403).json({ message: `Authorization denied, not amongst ${roles}` });
       }
       next();
     };

@@ -17,6 +17,13 @@ const Navbar = () => {
         navigate('/login');
     }
 
+    const navItems = [
+        { path: "/admin/patients", label: "Patients" },
+        { path: "/admin/doctors", label: "Doctors" },
+        { path: "/admin/nurses", label: "Nurses" },
+      ];      
+
+
     return (
         <nav className="bg-[#3554a4] fixed w-full z-20 top-0 start-0 border-b border-gray-200">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto pt-4 pb-4 pl-3 pr-3">
@@ -35,28 +42,17 @@ const Navbar = () => {
                     </button>
                 </div>
                 <div className={`items-center justify-between ${isCollapsed ? 'block' : 'hidden'} w-full md:flex md:w-auto md:order-1`} id="navbar-sticky">
-                    <ul className="flex flex-col p-4  mt-4 font-medium text-white border border-gray-100 bg-gray-800 rounded-lg md:items-center md:space-x-8 md:flex-row md:p-0 md:mt-0 md:border-0 md:bg-[#3554a4]">
-                        <li>
-                            <NavLink to="/admin/home"
-                                className={({ isActive }) => `block py-2 px-3 rounded-lg ${isActive ? "bg-[#3554a4] md:text-[#3554a4] md:bg-white" : ""}`}
-                            >
-                                Home
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/admin/doctor"
-                                className={({ isActive }) => `block py-2 px-3 rounded-lg ${isActive ? "bg-[#3554a4] md:text-[#3554a4] md:bg-white" : ""}`}
-                            >
-                                Doctor
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/admin/nurse"
-                                className={({ isActive }) => `block py-2 px-3 rounded-lg ${isActive ? "bg-[#3554a4] md:text-[#3554a4] md:bg-white" : ""}`}
-                            >
-                                Nurse
-                            </NavLink>
-                        </li>
+                    <ul className="flex flex-col p-4 mt-4 font-medium text-white border border-gray-100 bg-gray-800 rounded-lg md:items-center md:space-x-8 md:flex-row md:p-0 md:mt-0 md:border-0 md:bg-[#3554a4]">
+                        {navItems.map((item) => (
+                            <li key={item.path}>
+                                <NavLink
+                                    to={item.path}
+                                    className={({ isActive }) =>`block py-2 px-3 rounded-lg ${isActive ? "bg-[#3554a4] md:text-[#3554a4] md:bg-white" : ""}`}
+                                >
+                                    {item.label}
+                                </NavLink>
+                            </li>
+                        ))}
                     </ul>
                 </div>
             </div>

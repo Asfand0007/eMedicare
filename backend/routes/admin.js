@@ -1,99 +1,52 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken')
-const {VerifyJWT, authorizeRoles} = require('../middleware/Auth')
-const pool = require('../db')
-
+const pool = require('../db');
 const express = require('express');
-const router = express.Router()
+const { getDoctors, getDoctor, addDoctor } = require('../controllers/adminControllers/doctorControllers');
+const { getNurses, getNurse, addNurse, deleteNurse } = require('../controllers/adminControllers/nurseControllers');
+const { addAdmin } = require('../controllers/adminControllers/adminControllers');
+const { getPatients, getPatient, addPatient, deletePatient } = require('../controllers/adminControllers/patientControllers');
+const { getRooms, addRoom } = require('../controllers/adminControllers/roomControllers');
+const { getMedicines, getMedicine, addMedicine } = require('../controllers/adminControllers/medicineControllers');
+const {getDosageRecords}= require('../controllers/adminControllers/dosageControllers');
 
-router.post('/register', async (req, res) => {
-    const { userName, password } = req.body;
-    console.log(userName,password);
+const router = express.Router();
 
-    const userQuery = await pool.query(
-        "SELECT * FROM admins WHERE name=$1",
-        [userName]
-    );
-    if(userQuery.rows.length!=0)
-        return res.status(409).json({msg:"User already exsits"});
+router.post('/register', addAdmin);
 
-    const salt = await bcrypt.genSalt();
-    const bcryptPassword = await bcrypt.hash(password, salt);
+router.get('/getDoctors', getDoctors);
+router.get('/getDoctors/:id', getDoctors);
+router.get('/getDoctor/:id', getDoctor);
+router.post('/addDoctor', addDoctor);
 
-    console.log(userName, password)
+router.get('/getNurses', getNurses);
+router.get('/getNurses/:id', getNurses);
+router.get('/getNurse/:id', getNurse);
+router.post('/addNurse', addNurse);
+router.delete('/deleteNurse/:id', deleteNurse);
 
-    const newUser = await pool.query(
-        "INSERT INTO admins (name, password) VALUES ($1, $2) RETURNING *",
-        [userName, bcryptPassword]
-    );
-    return res.json(newUser.rows[0]);
-});
+router.get('/getPatients', getPatients);
+router.get('/getPatients/:id', getPatients);
+router.get('/getPatient/:id', getPatient);
+router.post('/addPatient', addPatient);
+router.delete('/deletePatient/:id', deletePatient);
 
-router.post('/addDoctor',VerifyJWT, authorizeRoles('admin'), async (req, res) => {
-    const { firstName, lastName, password } = req.body;
+router.get('/getRooms', getRooms);
+router.get('/getRooms/:id', getRooms);
+router.post('/addRoom', addRoom);
 
-    try{
-        const userQuery = await pool.query(
-            "SELECT * FROM doctors WHERE firstname=$1 AND lastname=$2",
-            [firstName, lastName]
-        );
+router.get('/getMedicines', getMedicines);
+router.get('/getMedicines/:id', getMedicines);
+router.get('/getMedicine/:medicine', getMedicine);
+router.post('/addMedicine', addMedicine);
 
-        if(userQuery.rows.length!=0)
-            return res.status(409).json({msg:"doctor already exsits"});
-    
-        const salt = await bcrypt.genSalt();
-        const bcryptPassword = await bcrypt.hash(password, salt);
-    
-        console.log(userName, password);
-    
-        const newUser = await pool.query(
-            "INSERT INTO doctors (firstName, lastName, password) VALUES ($1, $2, $3) RETURNING *",
-            [firstName, lastName, bcryptPassword]
-        );
-        return res.json(newUser.rows[0]);
-    }
-    catch (error) {
-        console.error(error.message);
-        res.status(500).json({ msg: "Server error" });
-    }
-})
+router.get('/getDosageRecords',getDosageRecords);
+router.get('/getDosageRecords/:id',getDosageRecords);
 
-router.post('/addNurse',VerifyJWT, authorizeRoles('admin'), async (req, res) => {
-    const { userName, password } = req.body;
-
-    try{
-        const userQuery = await pool.query(
-            "SELECT * FROM nurses WHERE name=$1",
-            [userName]
-        );
-
-        if(userQuery.rows.length!=0)
-            return res.status(409).json({msg:"nurse already exsits"});
-    
-        const salt = await bcrypt.genSalt();
-        const bcryptPassword = await bcrypt.hash(password, salt);
-    
-        console.log(userName, password);
-    
-        const newUser = await pool.query(
-            "INSERT INTO nurses (name, password) VALUES ($1, $2) RETURNING *",
-            [userName, bcryptPassword]
-        );
-        return res.json(newUser.rows[0]);
-    }
-    catch (error) {
-        console.error(error.message);
-        res.status(500).json({ msg: "Server error" });
-    }
-})
-
-
-router.get('/',VerifyJWT, authorizeRoles('admin'),  async (req, res)=>{
-    try{
-        const {userID, role} = req;
+router.get('/', async (req, res) => {
+    try {
+        const { userID, role } = req;
         const userQuery = await pool.query("SELECT * FROM admin WHERE id=$1", [userID]);
         const user = userQuery.rows[0];
-        res.status(200).json({msg: "Welcome Admin, "+ user.name})
+        res.status(200).json({ msg: "Welcome Admin, " + user.name })
     }
     catch (error) {
         console.error(error.message);

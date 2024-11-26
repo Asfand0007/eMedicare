@@ -1,23 +1,3 @@
-CREATE TABLE admins(
-    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name VARCHAR(255) NOT NULL, 
-    password VARCHAR(255) NOT NULL 
-);
-
-CREATE TABLE doctors(
-    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name VARCHAR(255) NOT NULL, 
-    password VARCHAR(255) NOT NULL 
-);
-
-CREATE TABLE nurses(
-    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name VARCHAR(255) NOT NULL, 
-    password VARCHAR(255) NOT NULL 
-);
-
-
-
 CREATE SEQUENCE employeeIDGenerator START WITH 1 INCREMENT BY 1;
 
 create table admins (
@@ -51,10 +31,10 @@ create table nurses (
   authPassword text not null
 );
 
-create table room (
+create table rooms (
   roomNumber bigint primary key generated always AS IDENTITY (START WITH 1 INCREMENT BY 1),
   capacity integer not null,
-  occupied boolean default false
+  occupied integer default 0
 );
 
 create table patients (
@@ -62,6 +42,7 @@ create table patients (
   firstName text not null,
   lastName text not null,
   gender text,
+  diagnosis text,
   dateOfBirth timestamp with time zone,
   admissionDate timestamp with time zone not null,
   roomNumber bigint references room (roomNumber),
@@ -74,7 +55,7 @@ CREATE TABLE formula (
     patentedBy TEXT NOT NULL
 );
 
-CREATE TABLE medicine (
+CREATE TABLE medicines (
     medicineName TEXT PRIMARY KEY,
     stock INTEGER NOT NULL,
     formulaName TEXT REFERENCES formula (formulaName)
@@ -83,14 +64,15 @@ CREATE TABLE medicine (
 create table dosage (
   dosageID bigint primary key generated always as identity,
   dosage_amount text,
-  patientmrID bigint references patient (mrID),
-  formulaName text references formula (formulaName)
+  patientmrID bigint references patients (mrID) ON DELETE CASCADE,
+  formulaName text
 );
 
 create table dosageTimes(
-  dosageID bigint references dosage(dosageID),
+  dosageID bigint references dosage(dosageID) ON DELETE CASCADE,
   time time not null,
-  adminitered boolean default (false)
+  administered boolean default (false),
+  nurseID bigint references nurses (employeeid)
 );
 
 
