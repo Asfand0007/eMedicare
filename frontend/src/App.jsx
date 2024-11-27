@@ -15,6 +15,7 @@ import MyDosages from './components/Nurse/pages/MyDosages';
 import NursePatientsRecords from './components/Nurse/pages/NursePatientsRecords';
 import UnadministeredDosages from './components/Nurse/pages/UnadministeredDosages';
 import { ToastContainer} from 'react-toastify';
+import AiRecommendation from './components/Nurse/pages/AiRecommendation';
 
 
 
@@ -92,6 +93,10 @@ const router = createBrowserRouter([
       {
         path: 'unadministeredDosages',
         element: <UnadministeredDosages/>,
+      },
+      {
+        path: 'aiRecommendation',
+        element : <AiRecommendation/>
       },
     ]
   },
