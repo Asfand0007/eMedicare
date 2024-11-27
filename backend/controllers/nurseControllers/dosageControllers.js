@@ -26,6 +26,21 @@ const administerDosage = async (req, res) => {
              )`,
             [dosageid]
         );
+        
+        const dosageTimeString = dosageQuery.rows[0].time; // "09:20:00" "HH:MM:SS"
+        const [hours, minutes, seconds] = dosageTimeString.split(":").map(Number);
+        
+        const today = new Date();
+        const dosageTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours, minutes, seconds);
+
+        const currentTime = new Date(); 
+
+        // Calculate the time diff
+        const timeDifference = Math.abs((currentTime - dosageTime) / 1000 / 60);
+
+        if (timeDifference > 15) {
+            return res.status(400).json({ msg: "Current time is not within 15 minutes of the dosage time" });
+        }
 
         if (medicineQuery.rows.length === 0) {
             return res.status(409).json({ msg: "Formula out of stock" });
