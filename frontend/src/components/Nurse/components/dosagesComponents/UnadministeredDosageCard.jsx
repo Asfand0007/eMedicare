@@ -31,6 +31,9 @@ const UnadministeredDosageCard = ({ dosage, setCardDosage, setDosageCount, dosag
                 setDosageCount(dosageCount - 1);
                 setCardDosage(null);
                 toast.success("Dosage Administered Successfully");
+            } else if(response.status === 418){
+                toast.error("Dosage must be administered within 15 minutes of assigned time");
+                console.log("Also you are a Teapot");
             } else if (response.status === 401) {
                 localStorage.removeItem("token");
                 return navigate("/unauthorized");
