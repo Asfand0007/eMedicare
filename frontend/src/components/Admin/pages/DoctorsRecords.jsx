@@ -9,7 +9,7 @@ import DoctorCard from "../components/doctorsComponents/DoctorCard";
 const DoctorsRecords = () => {
     const [doctors, setDoctors] = useState(null);
     const [doctorCount, setDoctorCount] = useState(0);
-    const [cardDoctor, setCardDoctor]= useState(null);
+    const [cardDoctor, setCardDoctor] = useState(null);
     const [searchValue, setSearchValue] = useState("");
     const navigate = useNavigate();
     useEffect(() => {
@@ -18,7 +18,7 @@ const DoctorsRecords = () => {
             if (!token) {
                 return navigate("/login");
             }
-            
+
             try {
                 const response = await fetch("http://localhost:4000/api/admin/getDoctors/" + searchValue, {
                     method: "GET",
@@ -29,7 +29,7 @@ const DoctorsRecords = () => {
                 });
 
                 const json = await response.json();
-                
+
                 if (response.ok) {
                     setDoctors(json.doctors);
                     setDoctorCount(json.count);
@@ -56,7 +56,7 @@ const DoctorsRecords = () => {
                 </div>
                 <div className="flex sm:ml-auto ml-0 my-2">
                     <div className="focus:outline-none text-white bg-[#1aac5c] font-medium rounded-lg text-sm px-2.5 py-2.5 me-2">Doctors: {doctorCount}</div>
-                    <DoctorForm doctorCount={doctorCount} setDoctorCount={setDoctorCount}/>
+                    <DoctorForm doctorCount={doctorCount} setDoctorCount={setDoctorCount} />
                 </div>
             </div>
             <div className="flex sm:flex-row flex-col-reverse">
@@ -68,9 +68,15 @@ const DoctorsRecords = () => {
                     ))}
                 </div>
                 <div className="mx-auto">
-                    {cardDoctor && <DoctorCard doctorID={cardDoctor.employeeid} setCardDoctor={setCardDoctor} setDoctorCount={setDoctorCount} doctorCount={doctorCount}/>}
+                    {cardDoctor &&
+                        <div className="sm:mx-0 mx-auto sm:w-[30%] min-w-[22rem] flex w-full">
+
+                            <DoctorCard doctorID={cardDoctor.employeeid} setCardDoctor={setCardDoctor} setDoctorCount={setDoctorCount} doctorCount={doctorCount} />
+
+                        </div>
+                    }
                 </div>
-         
+
             </div>
         </>
     );

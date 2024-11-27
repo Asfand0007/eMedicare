@@ -9,7 +9,7 @@ import PatientCard from "../components/patientsComponents/PatientCard";
 const NursePatientsRecords = () => {
     const [patients, setPatients] = useState(null);
     const [patientCount, setPatientCount] = useState(0);
-    const [cardPatient, setCardPatient]= useState(null);
+    const [cardPatient, setCardPatient] = useState(null);
     const [searchValue, setSearchValue] = useState("");
     const navigate = useNavigate();
     useEffect(() => {
@@ -67,9 +67,11 @@ const NursePatientsRecords = () => {
                     ))}
                 </div>
                 <div className="sm:mx-0 mx-auto sm:w-[30%] min-w-[22rem] flex w-full">
-                    {cardPatient && <PatientCard patientID={cardPatient.mrid} setCardPatient={setCardPatient} setPatientCount={setPatientCount} patientCount={patientCount}/>}
+                    {cardPatient &&
+                                <PatientCard patientID={cardPatient.mrid} setCardPatient={setCardPatient} setPatientCount={setPatientCount} patientCount={patientCount} />
+                    }
                 </div>
-         
+
             </div>
         </>
     );

@@ -69,7 +69,11 @@ const PatientsRecords = () => {
                     ))}
                 </div>
                 <div className="mx-auto">
-                    {cardPatient && <PatientCard patientID={cardPatient.mrid} setCardPatient={setCardPatient} setPatientCount={setPatientCount} patientCount={patientCount}/>}
+                    
+                    {cardPatient && 
+                    <div className="sm:mx-0 mx-auto sm:w-[30%] min-w-[22rem] flex w-full">
+                <PatientCard patientID={cardPatient.mrid} setCardPatient={setCardPatient} setPatientCount={setPatientCount} patientCount={patientCount}/>
+                </div>}
                 </div>
          
             </div>
