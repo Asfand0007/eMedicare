@@ -39,7 +39,7 @@ const administerDosage = async (req, res) => {
         const timeDifference = Math.abs((currentTime - dosageTime) / 1000 / 60);
 
         if (timeDifference > 15) {
-            return res.status(400).json({ msg: "Current time is not within 15 minutes of the dosage time" });
+            return res.status(418).json({ msg: "Current time is not within 15 minutes of the dosage time" });
         }
 
         if (medicineQuery.rows.length === 0) {
