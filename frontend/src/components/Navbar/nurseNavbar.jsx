@@ -20,8 +20,9 @@ const Navbar = () => {
     const navItems = [
         { path: "/nurse/patients", label: "Patients" },
         { path: "/nurse/myDosages", label: "My dosages" },
-        { path: "/nurse/unadministeredDosages", label: "Unadministered" }
-      ];      
+        { path: "/nurse/unadministeredDosages", label: "Unadministered" },
+        { path: "/nurse/aiRecommendation", label: "AI Powered Recommendation"}
+      ];
 
 
     return (
