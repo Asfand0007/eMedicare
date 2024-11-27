@@ -9,7 +9,7 @@ import MedicineCard from "../components/medicinesComponents/MedicineCard";
 const MedicinesRecords = () => {
     const [medicines, setMedicines] = useState(null);
     const [medicineCount, setMedicineCount] = useState(0);
-    const [cardMedicine, setCardMedicine]= useState(null);
+    const [cardMedicine, setCardMedicine] = useState(null);
     const [searchValue, setSearchValue] = useState("");
     const navigate = useNavigate();
     useEffect(() => {
@@ -18,7 +18,7 @@ const MedicinesRecords = () => {
             if (!token) {
                 return navigate("/login");
             }
-            
+
             try {
                 const response = await fetch("http://localhost:4000/api/admin/getMedicines/" + searchValue, {
                     method: "GET",
@@ -29,7 +29,7 @@ const MedicinesRecords = () => {
                 });
 
                 const json = await response.json();
-                
+
                 if (response.ok) {
                     setMedicines(json.medicines);
                     setMedicineCount(json.count);
@@ -56,7 +56,7 @@ const MedicinesRecords = () => {
                 </div>
                 <div className="flex sm:ml-auto ml-0 my-2">
                     <div className="focus:outline-none text-white bg-[#1aac5c] font-medium rounded-lg text-sm px-2.5 py-2.5 me-2">Medicines: {medicineCount}</div>
-                    <MedicineForm medicineCount={medicineCount} setMedicineCount={setMedicineCount}/>
+                    <MedicineForm medicineCount={medicineCount} setMedicineCount={setMedicineCount} />
                 </div>
             </div>
             <div className="flex sm:flex-row flex-col-reverse">
@@ -68,9 +68,13 @@ const MedicinesRecords = () => {
                     ))}
                 </div>
                 <div className="mx-auto">
-                    {cardMedicine && <MedicineCard medicineName={cardMedicine.medicinename} setCardMedicine={setCardMedicine} setMedicineCount={setMedicineCount} medicineCount={medicineCount}/>}
+                    {cardMedicine &&
+                        <div className="sm:mx-0 mx-auto sm:w-[30%] min-w-[22rem] flex w-full">
+                            <MedicineCard medicineName={cardMedicine.medicinename} setCardMedicine={setCardMedicine} setMedicineCount={setMedicineCount} medicineCount={medicineCount} />
+                        </div>
+                    }
                 </div>
-         
+
             </div>
         </>
     );

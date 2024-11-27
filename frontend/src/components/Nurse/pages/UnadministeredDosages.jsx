@@ -58,14 +58,14 @@ const UnadministeredDosages = () => {
                 </div>
             </div>
             <div className="flex sm:flex-row flex-col-reverse">
-                <div className="sm:w-[70%] w-[100%]">
+                <div className="md:w-[70%] w-[100%]">
                     {dosages && dosages.map((dosage, index) => (
                         <span key={index} className='cursor-pointer' onClick={() => setCardDosage(dosage)}>
                             <UnadministeredDosageRow key={index} dosage={dosage} dosageCount={dosageCount} setDosageCount={setDosageCount} />
                         </span>
                     ))}
                 </div>
-                <div className="mx-auto">
+                <div className="sm:mx-0 mx-auto sm:w-[30%] min-w-[22rem] flex w-full">
                     {cardDosage && <UnadministeredDosageCard dosage={cardDosage} setCardDosage={setCardDosage} setDosageCount={setDosageCount} dosageCount={dosageCount}/>}
                 </div>
             </div>

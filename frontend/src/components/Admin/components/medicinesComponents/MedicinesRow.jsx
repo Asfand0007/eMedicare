@@ -39,7 +39,7 @@ const MedicinesRow = ({ medicine,medicineCount, setMedicineCount }) => {
     };
 
     return (
-        <div className="bg-white rounded-lg p-5 shadow-md relative my-5 mx-5">
+        <div className="animate-fade-in-up bg-white rounded-lg p-5 shadow-md relative my-5 mx-5">
             <h4 className="text-lg font-semibold text-primary">{medicine.medicinename}</h4>
             <p className="text-sm text-gray-600">
                 <strong>Formula: </strong>{medicine.formulaname}

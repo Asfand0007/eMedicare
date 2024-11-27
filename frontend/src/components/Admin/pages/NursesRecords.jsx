@@ -9,7 +9,7 @@ import NurseCard from "../components/nursesComponents/NurseCard";
 const NursesRecords = () => {
     const [nurses, setNurse] = useState(null);
     const [nurseCount, setNurseCount] = useState(0);
-    const [cardNurse, setCardNurse]= useState(null);
+    const [cardNurse, setCardNurse] = useState(null);
     const [searchValue, setSearchValue] = useState("");
     const navigate = useNavigate();
     useEffect(() => {
@@ -18,7 +18,7 @@ const NursesRecords = () => {
             if (!token) {
                 return navigate("/login");
             }
-            
+
             try {
                 const response = await fetch("http://localhost:4000/api/admin/getNurses/" + searchValue, {
                     method: "GET",
@@ -29,7 +29,7 @@ const NursesRecords = () => {
                 });
 
                 const json = await response.json();
-                
+
                 if (response.ok) {
                     setNurse(json.nurses);
                     setNurseCount(json.count);
@@ -56,7 +56,7 @@ const NursesRecords = () => {
                 </div>
                 <div className="flex sm:ml-auto ml-0 my-2">
                     <div className="focus:outline-none text-white bg-[#1aac5c] font-medium rounded-lg text-sm px-2.5 py-2.5 me-2">Nurse: {nurseCount}</div>
-                    <NurseForm nurseCount={nurseCount} setNurseCount={setNurseCount}/>
+                    <NurseForm nurseCount={nurseCount} setNurseCount={setNurseCount} />
                 </div>
             </div>
             <div className="flex sm:flex-row flex-col-reverse">
@@ -68,9 +68,14 @@ const NursesRecords = () => {
                     ))}
                 </div>
                 <div className="mx-auto">
-                    {cardNurse && <NurseCard nurseID={cardNurse.employeeid} setCardNurse={setCardNurse} setNurseCount={setNurseCount} nurseCount={nurseCount}/>}
+                    {cardNurse &&
+                        <div className="sm:mx-0 mx-auto sm:w-[30%] min-w-[22rem] flex w-full">
+
+                            <NurseCard nurseID={cardNurse.employeeid} setCardNurse={setCardNurse} setNurseCount={setNurseCount} nurseCount={nurseCount} />
+                        </div>
+                    }
                 </div>
-         
+
             </div>
         </>
     );

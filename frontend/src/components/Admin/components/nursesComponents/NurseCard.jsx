@@ -74,7 +74,7 @@ const NurseCard = ({ nurseID, setCardNurse, setNurseCount, nurseCount }) => {
     return (
         <>
             {nurse ?
-                <div className="sm:w-[20rem] sm:mr-5 m-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
+                <div className="animate-pop-up sm:w-[20rem] w-full sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
                     <h5 className="mb-2 text-2xl font-bold text-gray-800 ">
                         {nurse.fullname}
                     </h5>

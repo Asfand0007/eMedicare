@@ -77,7 +77,7 @@ const DoctorForm = ({ doctorCount, setDoctorCount }) => {
                     className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full overflow-y-auto bg-black bg-opacity-50"
                     aria-hidden="true"
                 >
-                    <div className="relative p-4 w-full max-w-lg scrollbar-hide  max-h-[90%] overflow-auto">
+                    <div className="animate-pop-up relative p-4 w-full max-w-lg scrollbar-hide  max-h-[90%] overflow-auto">
                         <div className="relative bg-white rounded-lg shadow">
 
                             <div className="flex items-center justify-between p-4 border-b text-3xl text-white rounded-t">
