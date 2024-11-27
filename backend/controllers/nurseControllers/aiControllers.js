@@ -41,7 +41,7 @@ const getAiRecommendation = async (req, res) => {
         const genAI = new GoogleGenerativeAI(API_KEY);
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         const result = await model.generateContent(prompt);
-        console.log(result.response.text());
+        // console.log(result.response.text());
         return res.status(201).json({ response: result.response.text() });
          
     } catch (error) {

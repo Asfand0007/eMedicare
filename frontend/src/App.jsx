@@ -4,6 +4,8 @@ import Login from './components/Login/Login';
 import Unauthorized from './components/Unauthorized/Unauthorized';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import NurseDashboard from './components/Nurse/NurseDashboard';
+import DoctorDashboard from './components/Doctor/DoctorDashboard';
+
 
 import DoctorsRecords from './components/Admin/pages/DoctorsRecords';
 import PatientsRecords from './components/Admin/pages/PatientsRecords';
@@ -11,12 +13,14 @@ import NursesRecords from './components/Admin/pages/NursesRecords';
 import MedicinesRecords from './components/Admin/pages/MedicinesRecords';
 import DosagesRecords from './components/Admin/pages/DosageRecords';
 
+import DoctorPatientsRecords from './components/Doctor/pages/DoctorPatientsRecords';
+
 import MyDosages from './components/Nurse/pages/MyDosages';
 import NursePatientsRecords from './components/Nurse/pages/NursePatientsRecords';
 import UnadministeredDosages from './components/Nurse/pages/UnadministeredDosages';
 import { ToastContainer} from 'react-toastify';
 import AiRecommendation from './components/Nurse/pages/AiRecommendation';
-
+import DoctorDosagesRecords from './components/Doctor/pages/DoctorDosageRecords';
 
 
 const ProtectedRoute = ({ role, children }) => {
@@ -98,6 +102,28 @@ const router = createBrowserRouter([
         path: 'aiRecommendation',
         element : <AiRecommendation/>
       },
+    ]
+  },
+  {
+    path: '/doctor',
+    element: (
+      <ProtectedRoute role="doctor">
+        <DoctorDashboard />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: 'patients',
+        element: <DoctorPatientsRecords/>,
+      },
+      {
+        path: 'dosages',
+        element: <DoctorDosagesRecords/>,
+      },
+      // {
+      //   path: 'unadministeredDosages',
+      //   element: <UnadministeredDosages/>,
+      // },
     ]
   },
   {

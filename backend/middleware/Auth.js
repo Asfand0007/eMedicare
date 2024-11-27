@@ -24,7 +24,7 @@ const VerifyJWT = (req, res, next) => {
 const authorizeRoles = (...roles) => {
     return (req, res, next) => {
       if (!roles.includes(req.role)) {
-        return res.status(403).json({ message: `Authorization denied, not amongst ${roles}` });
+        return res.status(401).json({ message: `Authorization denied, not amongst ${roles}` });
       }
       next();
     };

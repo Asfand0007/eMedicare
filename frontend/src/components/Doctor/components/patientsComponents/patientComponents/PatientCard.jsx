@@ -1,7 +1,8 @@
-import { MdDelete } from "react-icons/md";
-import { ThreeCircles } from "react-loader-spinner";
+
 import { useEffect, useState } from "react";
+import { ThreeCircles } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
+import DosageForm from "./DosageForm";
 
 const PatientCard = ({ patientID, setCardPatient, setPatientCount, patientCount }) => {
     const [patient, setPatient] = useState(null);
@@ -13,11 +14,10 @@ const PatientCard = ({ patientID, setCardPatient, setPatientCount, patientCount 
             if (!token) {
                 return navigate("/login");
             }
-            
             setPatient(null);
             console.log(patientID);
             try {
-                const response = await fetch("http://localhost:4000/api/admin/getPatient/" + patientID, {
+                const response = await fetch("http://localhost:4000/api/doctor/getPatient/" + patientID, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -37,44 +37,13 @@ const PatientCard = ({ patientID, setCardPatient, setPatientCount, patientCount 
                     console.error("Error fetching data:", json?.msg || "Unknown error");
                 }
             } catch (error) {
+
                 console.error("Network error:", error);
             }
         };
 
         fetchData();
     }, [patientID]);
-
-
-    const handleDelete = async () => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            return navigate("/login");
-        }
-        try {
-            const response = await fetch("http://localhost:4000/api/admin/deletePatient/" + patient.mrid, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            const json = await response.json();
-            if (response.ok) {
-                setPatientCount(patientCount - 1);
-                setCardPatient(null);
-            } else if (response.status === 401) {
-                localStorage.removeItem("token");
-                return navigate("/unauthorized");
-            }
-            else {
-                console.error("Error fetching data:", json?.msg || "Unknown error");
-            }
-        } catch (error) {
-            console.error("Network error:", error);
-        }
-    };
-
 
     return (
         <>
@@ -88,28 +57,26 @@ const PatientCard = ({ patientID, setCardPatient, setPatientCount, patientCount 
                         <strong className="text-[#3554a4]" >Date of Birth:</strong> {new Date(patient.dateofbirth).toLocaleDateString()} <br />
                         <strong className="text-[#3554a4]" >Admission Date:</strong> {new Date(patient.admissiondate).toLocaleDateString()} <br />
                         <strong className="text-[#3554a4]" >Room Number:</strong> {patient.roomnumber} <br />
-                        <strong className="text-[#3554a4]" >Doctor ID:</strong> {patient.doctorid} <br />
                         <strong className="text-[#3554a4]" >Diagnosis:</strong> {patient.diagnosis || "Not provided"}
                     </p>
 
-                    <h5 className="text-xl font-bold text-[#3554a4] ">Dosages:</h5>
+                    <div className="flex items-center justify-between">
+                        <h5 className="text-xl font-bold text-[#3554a4] ">Dosages</h5>
+                        <DosageForm patient={patient}/>
+                    </div>
                     {dosages.length > 0 ? (
                         <ul className="list-disc pl-5 text-gray-700">
                             {dosages.map((dosage) => (
                                 <li key={dosage.dosageid}>
-                                    <strong>Formula:</strong> {dosage.formulaname},{" "}
-                                    <strong>Amount:</strong> {dosage.dosage_amount},{" "}
-                                    <strong>Count:</strong> {dosage.count}
+                                    <strong>Formula:</strong> {dosage.formulaname} <br />
+                                    <strong>Amount:</strong> {dosage.dosage_amount} <br />
+                                    <strong>Dosage per day:</strong> {dosage.count}
                                 </li>
                             ))}
                         </ul>
                     ) : (
                         <p className="text-gray-700">No dosages available.</p>
                     )}
-                    <span onClick={handleDelete} className="mt-4 flex justify-center items-center gap-2 bg-red-500 py-2 rounded-full cursor-pointer w-28 text-gray-100">
-                        DELETE
-                        <MdDelete />
-                    </span>
                 </div> :
                 <div className="animate-pop-up sm:w-[20rem] h-[40vh] w-full flex justify-center flex-col items-center sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
                     <ThreeCircles color={'#3554a4'} height="6vh" />

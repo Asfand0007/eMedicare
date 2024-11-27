@@ -1,5 +1,5 @@
-import { MdDelete } from "react-icons/md";
 import { useEffect, useState } from "react";
+import { ThreeCircles } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 
 const PatientCard = ({ patientID, setCardPatient, setPatientCount, patientCount }) => {
@@ -13,6 +13,7 @@ const PatientCard = ({ patientID, setCardPatient, setPatientCount, patientCount 
                 return navigate("/login");
             }
             console.log(patientID);
+            setPatient(null);
             try {
                 const response = await fetch("http://localhost:4000/api/nurse/getPatient/" + patientID, {
                     method: "GET",
@@ -44,7 +45,7 @@ const PatientCard = ({ patientID, setCardPatient, setPatientCount, patientCount 
     return (
         <>
             {patient ?
-                <div className="animate-pop-up sm:w-[20rem] w-full sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
+                <div className="animate-pop-up sm:w-[20rem] max-h-[65vh] overflow-x-auto w-full sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
                     <h5 className="mb-2 text-2xl font-bold text-gray-800 ">
                         {patient.fullname}
                     </h5>
@@ -72,7 +73,10 @@ const PatientCard = ({ patientID, setCardPatient, setPatientCount, patientCount 
                         <p className="text-gray-700">No dosages available.</p>
                     )}
                 </div> :
-                <h1>loading</h1>
+                <div className="animate-pop-up sm:w-[20rem] h-[40vh] w-full flex justify-center flex-col items-center sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
+                    <ThreeCircles color={'#3554a4'} height="6vh" />
+                    <h1 className=" text-center text-[#3554a4] text-lg font-semibold">Fetching Record</h1>
+                </div>
             }
         </>
     );

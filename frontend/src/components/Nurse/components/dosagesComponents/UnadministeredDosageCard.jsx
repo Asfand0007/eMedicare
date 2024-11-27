@@ -1,4 +1,5 @@
 import { IoIosAddCircle } from "react-icons/io";
+import { ThreeCircles } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -31,7 +32,7 @@ const UnadministeredDosageCard = ({ dosage, setCardDosage, setDosageCount, dosag
                 setDosageCount(dosageCount - 1);
                 setCardDosage(null);
                 toast.success("Dosage Administered Successfully");
-            } else if(response.status === 418){
+            } else if (response.status === 418) {
                 toast.error("Dosage must be administered within 15 minutes of assigned time");
                 console.log("Also you are a Teapot");
             } else if (response.status === 401) {
@@ -50,7 +51,7 @@ const UnadministeredDosageCard = ({ dosage, setCardDosage, setDosageCount, dosag
     return (
         <>
             {dosage ? (
-                <div className="animate-pop-up sm:w-[20rem] w-full sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
+                <div className="animate-pop-up sm:w-[20rem] max-h-[65vh] overflow-x-auto w-full sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
                     <h5 className="mb-2 text-2xl font-bold text-gray-800 ">
                         {dosage.patientname}
                     </h5>
@@ -80,7 +81,10 @@ const UnadministeredDosageCard = ({ dosage, setCardDosage, setDosageCount, dosag
                     </span>
                 </div>
             ) : (
-                <h1>Loading...</h1>
+                <div className="animate-pop-up sm:w-[20rem] h-[40vh] w-full flex justify-center flex-col items-center sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
+                    <ThreeCircles color={'#3554a4'} height="6vh" />
+                    <h1 className=" text-center text-[#3554a4] text-lg font-semibold">Fetching Record</h1>
+                </div>
             )}
         </>
     );
