@@ -1,10 +1,10 @@
 import { createBrowserRouter, RouterProvider, Route, Outlet, Navigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
-import Login from './components/Login/Login';
-import Unauthorized from './components/Unauthorized/Unauthorized';
-import AdminDashboard from './components/Admin/AdminDashboard';
-import DoctorsRecords from './components/Admin/pages/DoctorsRecords';
-import PatientsRecords from './components/Admin/pages/PatientsRecords';
+import Login from './components/Login/login';
+import Unauthorized from './components/Unauthorized/unauthorized';
+import AdminDashboard from './components/Admin/adminDashboard';
+import DoctorsRecords from './components/Admin/Pages/doctorsRecords';
+import PatientsRecords from './components/Admin/Pages/patientsRecords';
 
 
 const ProtectedRoute = ({ role, children }) => {

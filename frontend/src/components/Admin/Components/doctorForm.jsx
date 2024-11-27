@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Form, useForm } from "react-hook-form";
 import { Navigate } from "react-router-dom";
-import FormField from "../Utils/FormField";
-import TimeFormField from "../Utils/TimeFormField";
+import FormField from "../Utils/formField";
+import TimeFormField from "../Utils/timeFormField";
 const DoctorForm = () => {
   const {
     register,

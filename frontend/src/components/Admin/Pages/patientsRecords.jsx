@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PatientsRow from "../../shared/patientsRow";
-import SearchBar from "../../shared/SearchBar";
-import PatientForm from "../components/PatientForm";
-import PatientCard from "../components/PatientCard";
+import PatientsRow from "../../Shared/patientsRow";
+import SearchBar from "../../Shared/searchBar";
+import PatientForm from "../Components/patientForm";
+import PatientCard from "../Components/patientCard";
 
 
 const PatientsRecords = () => {

@@ -1,4 +1,4 @@
-import "./Symbol.css";
+import "./symbol.css";
 
 const Symbol= ()=>{
     const animation={
