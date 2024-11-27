@@ -156,12 +156,18 @@ const getUnadministeredDosages = async (req, res) => {
                 dosage d ON pt.mrID = d.patientmrID
              JOIN 
                 dosageTimes dt ON dt.dosageID = d.dosageID
-            WHERE administered = false`
-            + condition +
-            ` ORDER BY 
+             WHERE 
+                administered = false
+                ` + condition + `
+             ORDER BY 
+                CASE 
+                    WHEN dt.Time >= (CURRENT_TIME + INTERVAL '5 hours') THEN 0
+                    ELSE 1
+                END,
                 dt.Time ASC;`,
             params
         );
+        
 
         res.status(200).json({ count: dosageQuery.rows.length, dosages: dosageQuery.rows });
     } catch (error) {

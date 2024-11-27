@@ -68,14 +68,14 @@ const getFormula=async(req, res)=>{
 const getDosageRecords = async (req, res) => {
     const { id } = req.params;
     let condition = '';
-    params = []
+    params = [req.userID]
     if (id) {
         params.push(id);
         if (isNaN(id)) {
-            condition = " WHERE pt.firstname LIKE ('%' || $1 || '%') OR pt.lastname LIKE ('%' || $1 || '%')";
+            condition = "AND pt.firstname LIKE ('%' || $2 || '%') OR pt.lastname LIKE ('%' || $2 || '%')";
         }
         else {
-            condition = " WHERE pt.mrID = $1 OR d.dosageID=$1";
+            condition = "AND pt.mrID = $2 OR d.dosageID=$2";
         }
     }
     
@@ -95,7 +95,8 @@ const getDosageRecords = async (req, res) => {
         JOIN 
             dosageTimes dt ON dt.dosageID = d.dosageID
         LEFT JOIN 
-            nurses n ON n.employeeID = dt.nurseID`
+            nurses n ON n.employeeID = dt.nurseID
+        WHERE pt.doctorID=$1`
         +condition+
         ` ORDER BY 
             pt.mrid`,

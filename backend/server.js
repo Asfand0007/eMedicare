@@ -8,10 +8,16 @@ const nurseRoutes= require('./routes/nurse');
 const doctorRoutes= require('./routes/doctor');
 const loginRoutes= require('./routes/login');
 const { verify } = require('jsonwebtoken');
+const initializeResetScheduler = require('./scheduler/scheduler');
+const initializeEmailScheduler = require( './scheduler/emailScheduler');
+
 const app = express();
+
 
 app.use(express.json());
 app.use(cors());
+initializeResetScheduler();
+initializeEmailScheduler();
 
 app.get('/', (req, res) => {
   res.send('Hello World!');

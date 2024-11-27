@@ -102,3 +102,16 @@ CREATE TRIGGER reassignPatientTrigger
 BEFORE DELETE ON doctors
 FOR EACH ROW
 EXECUTE FUNCTION reassignPatientsBeforeDelete();
+
+
+CREATE OR REPLACE FUNCTION reset_administered_status()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE dosageTimes
+    SET administered = false
+    WHERE administered = true;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+
