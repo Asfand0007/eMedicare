@@ -14,7 +14,7 @@ const MedicinesRow = ({ medicine,medicineCount, setMedicineCount }) => {
             return navigate("/login");
         }
         try {
-            const response = await fetch("http://localhost:4000/api/admin/deleteMedicine/"+medicine.mrid, {
+            const response = await fetch("http://localhost:4000/api/admin/deleteMedicine/"+medicine.medicinename, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",

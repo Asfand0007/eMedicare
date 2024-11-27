@@ -1,6 +1,8 @@
 import { MdDelete } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const DoctorCard = ({ doctorID, setCardDoctor, setDoctorCount, doctorCount }) => {
     const [doctor, setDoctor] = useState(null);
@@ -27,6 +29,7 @@ const DoctorCard = ({ doctorID, setCardDoctor, setDoctorCount, doctorCount }) =>
                 if (response.ok) {
                     setDoctor(json.doctor);
                     setPatients(json.patients);
+                    
                 } else if (response.status === 401) {
                     return navigate("/unauthorized");
                 }
@@ -60,6 +63,7 @@ const DoctorCard = ({ doctorID, setCardDoctor, setDoctorCount, doctorCount }) =>
             if (response.ok) {
                 setDoctorCount(doctorCount - 1);
                 setCardDoctor(null);
+                toast.success("Doctor Deleted!");
             } else if (response.status === 401) {
                 localStorage.removeItem("token");
                 return navigate("/unauthorized");

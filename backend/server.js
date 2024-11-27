@@ -5,6 +5,7 @@ const cors= require('cors')
 const { VerifyJWT, authorizeRoles } = require('./middleware/Auth');
 const adminRoutes= require('./routes/admin');
 const nurseRoutes= require('./routes/nurse');
+const doctorRoutes= require('./routes/doctor');
 const loginRoutes= require('./routes/login');
 const { verify } = require('jsonwebtoken');
 const app = express();
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
 app.use('/api/login', loginRoutes);
 
 app.use('/api/admin', VerifyJWT, authorizeRoles('admin'), adminRoutes);
+app.use('/api/doctor', VerifyJWT,authorizeRoles('doctor'), doctorRoutes);
 app.use('/api/nurse', VerifyJWT,authorizeRoles('nurse'), nurseRoutes);
 
 app.listen(process.env.PORT, () => {

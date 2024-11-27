@@ -1,6 +1,8 @@
 import { MdDelete } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MedicineCard = ({ medicineName, setCardMedicine, setMedicineCount, medicineCount }) => {
     const [medicine, setMedicine] = useState(null);
@@ -47,7 +49,7 @@ const MedicineCard = ({ medicineName, setCardMedicine, setMedicineCount, medicin
             return navigate("/login");
         }
         try {
-            const response = await fetch("http://localhost:4000/api/admin/deleteMedicine/" + medicine.employeeid, {
+            const response = await fetch("http://localhost:4000/api/admin/deleteMedicine/" + medicine.medicinename, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -59,6 +61,7 @@ const MedicineCard = ({ medicineName, setCardMedicine, setMedicineCount, medicin
             if (response.ok) {
                 setMedicineCount(medicineCount - 1);
                 setCardMedicine(null);
+                toast.success("Medicine Deleted!");
             } else if (response.status === 401) {
                 localStorage.removeItem("token");
                 return navigate("/unauthorized");
@@ -87,8 +90,8 @@ const MedicineCard = ({ medicineName, setCardMedicine, setMedicineCount, medicin
                     <h5 className="text-xl font-bold text-[#3554a4] ">Dosages:</h5>
                     {dosages.length > 0 ? (
                         <ul className="list-disc pl-5 text-gray-700">
-                            {dosages.map((dosage) => (
-                                <li key={dosage.mrid}>
+                            {dosages.map((dosage, index) => (
+                                <li key={index}>
                                     <strong>Dosage ID:</strong> {dosage.dosageid},{" "}
                                     <strong>Patient mrID:</strong> {dosage.patientmrid}
                                 </li>

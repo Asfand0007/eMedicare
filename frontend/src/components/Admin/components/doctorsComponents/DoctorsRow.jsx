@@ -14,7 +14,7 @@ const DoctorsRow = ({ doctor,doctorCount, setDoctorCount }) => {
             return navigate("/login");
         }
         try {
-            const response = await fetch("http://localhost:4000/api/admin/deleteDoctor/"+doctor.mrid, {
+            const response = await fetch("http://localhost:4000/api/admin/deleteDoctor/"+doctor.employeeid, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",

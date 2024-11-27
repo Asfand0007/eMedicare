@@ -61,9 +61,9 @@ const MedicinesRecords = () => {
             </div>
             <div className="flex sm:flex-row flex-col-reverse">
                 <div className="sm:w-[70%] w-[100%]">
-                    {medicines && medicines.map((medicine) => (
-                        <span key={medicine.medicinename} className='cursor-pointer' onClick={() => setCardMedicine(medicine)}>
-                            <MedicinesRow key={medicine.medicinename} medicine={medicine} medicineCount={medicineCount} setMedicineCount={setMedicineCount} />
+                    {medicines && medicines.map((medicine, index) => (
+                        <span key={index} className='cursor-pointer' onClick={() => setCardMedicine(medicine)}>
+                            <MedicinesRow key={index} medicine={medicine} medicineCount={medicineCount} setMedicineCount={setMedicineCount} />
                         </span>
                     ))}
                 </div>

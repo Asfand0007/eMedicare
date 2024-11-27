@@ -73,9 +73,30 @@ const addMedicine = async (req, res) => {
     }
 }
 
+const deleteMedicine= async (req, res)=>{
+    const {id}= req.params
+
+    try {
+        const deletedMedicine = await pool.query(
+            "DELETE FROM medicines WHERE medicineName=$1 RETURNING *",
+            [id]
+        );
+        
+        if (deletedMedicine.rows.length === 0) {
+            res.status(404).json({msg: "No Medicine found"});
+        }
+        
+        return res.status(200).json(deletedMedicine.rows[0]);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: "Server error" });
+    }
+}
+
 module.exports={
     getMedicines,
     getFormula,
     getMedicine,
-    addMedicine
+    addMedicine,
+    deleteMedicine
 }

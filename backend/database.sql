@@ -76,4 +76,29 @@ create table dosageTimes(
   PRIMARY KEY (dosageID, time)
 );
 
+CREATE OR REPLACE FUNCTION reassignPatientsBeforeDelete()
+RETURNS TRIGGER AS $$
+DECLARE
+    newDoctor bigint;
+BEGIN
+    SELECT employeeID INTO newDoctor
+    FROM doctors
+    WHERE employeeID != OLD.employeeID
+    LIMIT 1;
 
+    IF newDoctor IS NULL THEN
+        RAISE EXCEPTION 'No other doctor available to reassign patients.';
+    END IF;
+
+    UPDATE patients
+    SET doctorID = newDoctor
+    WHERE doctorID = OLD.employeeID;
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER reassignPatientTrigger
+BEFORE DELETE ON doctors
+FOR EACH ROW
+EXECUTE FUNCTION reassignPatientsBeforeDelete();
