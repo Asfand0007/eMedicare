@@ -40,7 +40,7 @@ const DoctorsRow = ({ doctor,doctorCount, setDoctorCount }) => {
 
     return (
         <div className="bg-white rounded-lg p-5 shadow-md relative my-5 mx-5">
-            <h4 className="text-lg font-semibold text-primary">{doctor.fullname}</h4>
+            <h4 className="text-lg font-semibold text-primary">Dr. {doctor.fullname}</h4>
             <p className="text-sm text-gray-600">
                 <strong>Employee ID: </strong> {doctor.employeeid}
             </p>

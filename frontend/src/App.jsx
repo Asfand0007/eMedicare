@@ -3,11 +3,17 @@ import {jwtDecode} from 'jwt-decode';
 import Login from './components/Login/Login';
 import Unauthorized from './components/Unauthorized/Unauthorized';
 import AdminDashboard from './components/Admin/AdminDashboard';
+import NurseDashboard from './components/Nurse/NurseDashboard';
+
 import DoctorsRecords from './components/Admin/pages/DoctorsRecords';
 import PatientsRecords from './components/Admin/pages/PatientsRecords';
 import NursesRecords from './components/Admin/pages/NursesRecords';
 import MedicinesRecords from './components/Admin/pages/MedicinesRecords';
 import DosagesRecords from './components/Admin/pages/DosageRecords';
+
+import MyDosages from './components/Nurse/pages/MyDosages';
+import NursePatientsRecords from './components/Nurse/pages/NursePatientsRecords';
+import UnadministeredDosages from './components/Nurse/pages/UnadministeredDosages';
 import { ToastContainer} from 'react-toastify';
 
 
@@ -65,9 +71,29 @@ const router = createBrowserRouter([
         path: 'dosages',
         element: <DosagesRecords/>,
       },
-      // Add more nested routes as needed
-    ],
-    // Add nested routes for admin as needed
+    ]
+  },
+  {
+    path: '/nurse',
+    element: (
+      <ProtectedRoute role="nurse">
+        <NurseDashboard />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: 'patients',
+        element: <NursePatientsRecords/>,
+      },
+      {
+        path: 'myDosages',
+        element: <MyDosages/>,
+      },
+      {
+        path: 'unadministeredDosages',
+        element: <UnadministeredDosages/>,
+      },
+    ]
   },
   {
     path: '/unauthorized',

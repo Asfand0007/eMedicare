@@ -78,7 +78,7 @@ const DoctorCard = ({ doctorID, setCardDoctor, setDoctorCount, doctorCount }) =>
             {doctor ?
                 <div className="sm:w-[20rem] sm:mr-5 m-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
                     <h5 className="mb-2 text-2xl font-bold text-gray-800 ">
-                        {doctor.fullname}
+                        Dr. {doctor.fullname}
                     </h5>
                     <p className="mb-3 font-normal text-gray-700 ">
                         <strong className="text-[#3554a4]" >Employee ID:</strong> {doctor.employeeid} <br />
