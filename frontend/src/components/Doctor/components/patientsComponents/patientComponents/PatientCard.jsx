@@ -1,12 +1,14 @@
 
 import { useEffect, useState } from "react";
 import { ThreeCircles } from "react-loader-spinner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSubmit } from "react-router-dom";
 import DosageForm from "./DosageForm";
+import DosageItem from "../DosageItem";
 
 const PatientCard = ({ patientID, setCardPatient, setPatientCount, patientCount }) => {
     const [patient, setPatient] = useState(null);
     const [dosages, setDosages] = useState(null);
+    const [dosageCount, setDosageCount]= useState(0);
     const navigate = useNavigate();
     useEffect(() => {
         const fetchData = async () => {
@@ -30,6 +32,7 @@ const PatientCard = ({ patientID, setCardPatient, setPatientCount, patientCount 
                 if (response.ok) {
                     setPatient(json.patient);
                     setDosages(json.dosages);
+                    setDosageCount(json.dosages.length);
                 } else if (response.status === 401) {
                     return navigate("/unauthorized");
                 }
@@ -43,7 +46,7 @@ const PatientCard = ({ patientID, setCardPatient, setPatientCount, patientCount 
         };
 
         fetchData();
-    }, [patientID]);
+    }, [patientID, dosageCount]);
 
     return (
         <>
@@ -61,17 +64,15 @@ const PatientCard = ({ patientID, setCardPatient, setPatientCount, patientCount 
                     </p>
 
                     <div className="flex items-center justify-between">
-                        <h5 className="text-xl font-bold text-[#3554a4] ">Dosages</h5>
+                        <h5 className="text-xl font-bold text-[#3554a4] ">Dosages({dosageCount})</h5>
                         <DosageForm patient={patient}/>
                     </div>
                     {dosages.length > 0 ? (
                         <ul className="list-disc pl-5 text-gray-700">
-                            {dosages.map((dosage) => (
-                                <li key={dosage.dosageid}>
-                                    <strong>Formula:</strong> {dosage.formulaname} <br />
-                                    <strong>Amount:</strong> {dosage.dosage_amount} <br />
-                                    <strong>Dosage per day:</strong> {dosage.count}
-                                </li>
+                            {dosages.map((dosage, index) => (
+                                <div key={index}>
+                                        <DosageItem dosage={dosage} dosageCount={dosageCount} setDosageCount={setDosageCount}/>
+                                </div>
                             ))}
                         </ul>
                     ) : (
