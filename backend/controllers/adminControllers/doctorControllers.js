@@ -8,7 +8,7 @@ const getDoctors = async (req, res) => {
     if (id) {
         params.push(id);
         if (isNaN(id)) {
-            condition = " WHERE d.firstname LIKE ('%' || $1 || '%') OR d.lastname LIKE ('%' || $1 || '%')";
+            condition = " WHERE d.firstname ILIKE ('%' || $1 || '%') OR d.lastname ILIKE ('%' || $1 || '%')";
         }
         else {
             condition = " WHERE d.employeeid = $1";
