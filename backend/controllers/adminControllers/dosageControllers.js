@@ -38,4 +38,32 @@ const getDosageRecords = async (req, res) => {
     res.status(200).json({count: dosageQuery.rows.length, dosages:dosageQuery.rows});
 }
 
-module.exports={getDosageRecords};
+
+const deleteDosageRecord = async (req,res) => {
+    const { id } = req.params;
+    try {
+        await pool.query("BEGIN");
+        const deletedDosage = await pool.query(
+            `
+             DELETE FROM dosage
+             WHERE dosageid=$1
+             RETURNING *
+            `,
+            [id]
+        );
+        if(deletedDosage.rowCount===0){
+            throw new Error("No associated Dosage found");
+        }
+        await pool.query("COMMIT");
+        return res.status(200).json({ msg: "Dosage Record Successfully Deleted" });
+    } catch (error){
+        await pool.query("ROLLBACK");
+        console.error("Transaction Failed: ", error.message);
+        return res.status(500).json({ msg: error.message });
+    }
+}
+
+module.exports={
+    getDosageRecords,
+    deleteDosageRecord
+};
