@@ -5,7 +5,7 @@ const DoctorDashboard = () => {
     return (
         <>
             <Navbar />
-            <div className="bg-red-300 h-[72px]"></div>
+            <div className="h-[72px]"></div>
             <Outlet />
         </>
     );
