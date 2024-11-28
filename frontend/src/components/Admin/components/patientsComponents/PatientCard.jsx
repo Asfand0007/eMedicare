@@ -2,6 +2,8 @@ import { MdDelete } from "react-icons/md";
 import { ThreeCircles } from "react-loader-spinner";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PatientCard = ({ patientID, setCardPatient, setPatientCount, patientCount }) => {
     const [patient, setPatient] = useState(null);
@@ -62,9 +64,11 @@ const PatientCard = ({ patientID, setCardPatient, setPatientCount, patientCount 
             const json = await response.json();
             if (response.ok) {
                 setPatientCount(patientCount - 1);
+                toast.success("Patient Successfully Deleted");
                 setCardPatient(null);
             } else if (response.status === 401) {
                 localStorage.removeItem("token");
+                toast.error("Error in Deleting Patient: ", json?.msg);
                 return navigate("/unauthorized");
             }
             else {

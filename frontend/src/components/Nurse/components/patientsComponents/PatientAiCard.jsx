@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 const PatientAiCard = ({ patientID }) => {
     const [patient, setPatient] = useState(null);
     const [dosages, setDosages] = useState(null);
