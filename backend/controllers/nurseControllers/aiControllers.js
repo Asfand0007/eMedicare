@@ -26,15 +26,13 @@ const getAiRecommendation = async (req, res) => {
     }
 
     const prompt = `
-    I have a patient diagnosed with ${diagnosis}. Can you provide a detailed guide on how to care for them? Keep this in mind
-    that these instructions are for the nurses on how best to take care of the patient.
-    Please include the following:
-    1. An explanation of the condition in layman's terms.
-    2. The best practices for daily care, including physical and emotional support.
-    3. Lifestyle adjustments and dietary recommendations, if applicable.
-    4. Possible symptoms or complications to monitor.
-    5. Tips for communicating effectively with the patient and their healthcare providers.
-    6. Any relevant precautions or considerations based on their specific condition.
+    I have a patient diagnosed with Cancer. Can you provide a guide on how to care for them? Keep this in mind that these instructions are for the nurses on how best to take care of the patient. Please include the following:
+        The best practices for daily care, including physical and emotional support.
+        Lifestyle adjustments and dietary recommendations, if applicable.
+        Possible symptoms or complications to monitor.
+        Tips for communicating effectively with the patient and their healthcare providers.
+        Any relevant precautions or considerations based on their specific condition.
+        Return the response in a single string with no brackets, quotes, bullet points, or numbering. The output should be in paragraph format, comprehensive, and include all the requested details.
     `;
 
     try {
@@ -43,7 +41,7 @@ const getAiRecommendation = async (req, res) => {
         const result = await model.generateContent(prompt);
         // console.log(result.response.text());
         return res.status(201).json({ response: result.response.text() });
-         
+
     } catch (error) {
         console.error("AI Generation error: ", error); // Log the entire error object for more context
         return res.status(500).json({ msg: "Error generating AI response", error: error.message });

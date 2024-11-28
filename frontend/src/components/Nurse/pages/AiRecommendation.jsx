@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PatientsRow from "../components/patientsComponents/PatientsRow";
 import SearchBar from "../../shared/SearchBar";
-import PatientAiCard from "../components/patientsComponents/PatientAiCard"; 
 
 const AiRecommendation = () => {
     const [patients, setPatients] = useState(null);
@@ -63,9 +62,6 @@ const AiRecommendation = () => {
                             <PatientsRow key={patient.mrid} patient={patient} patientCount={patientCount} setPatientCount={setPatientCount} />
                         </span>
                     ))}
-                </div>
-                <div className="mx-auto">
-                    {cardPatient && <PatientAiCard patientID={cardPatient.mrid} setCardPatient={setCardPatient} setPatientCount={setPatientCount} patientCount={patientCount} />}
                 </div>
             </div>
         </>
