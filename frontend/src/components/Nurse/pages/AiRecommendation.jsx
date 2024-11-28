@@ -55,8 +55,9 @@ const AiRecommendation = () => {
                     <div className="focus:outline-none text-white bg-[#1aac5c] font-medium rounded-lg text-sm px-2.5 py-2.5 me-2">Patients: {patientCount}</div>
                 </div>
             </div>
-            <div className="flex sm:flex-row flex-col-reverse">
-                <div className="sm:w-[70%] w-[100%]">
+                
+            <div>
+                <div className="sm:w-[70%] mx-auto w-[100%]">
                     {patients && patients.map((patient) => (
                         <span key={patient.mrid} className='cursor-pointer' onClick={() => setCardPatient(patient)}>
                             <PatientsRow key={patient.mrid} patient={patient} patientCount={patientCount} setPatientCount={setPatientCount} />
