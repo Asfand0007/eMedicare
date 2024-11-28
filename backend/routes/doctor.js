@@ -3,8 +3,8 @@ const express = require('express');
 const router = express.Router();
 
 const { getMyPatients, getPatient, addDiagnosis } = require('../controllers/doctorControllers/patientControllers')
-const { addDosage, getFormula, getDosageRecords } = require('../controllers/doctorControllers/dosageControllers');
-const { deleteDosageRecord } = require('../controllers/adminControllers/dosageControllers');
+const { addDosage, getFormula, getDosageRecords, deleteDosageRecord } = require('../controllers/doctorControllers/dosageControllers');
+
 
 router.get('/getMyPatients', getMyPatients);
 router.get('/getMyPatients/:id', getMyPatients);
