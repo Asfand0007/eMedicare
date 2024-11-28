@@ -82,7 +82,7 @@ const PatientAIModal = ({ patient, setDisplayModal }) => {
                             <h5 className="text-xl font-bold text-[#3554a4] mt-4">AI Recommendation:</h5>
                             {loading ? (
                                 <div className="flex items-center gap-0 mt-2">
-                                    <p className="text-gray-700">Loading AI recommendation..</p>
+                                    <p className="pl-4 text-[#3554a4]">Analyzing diagnosis..</p>
                                     <ThreeCircles color={'#3554a4'} height="5vh" />
                                 </div>
                             ) : aiRecommendation ? (

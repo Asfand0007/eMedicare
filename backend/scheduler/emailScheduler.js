@@ -68,7 +68,6 @@ const initializeEmailScheduler = async () => {
         dosageTime.setHours(parseInt(hours, 10));
         dosageTime.setMinutes(parseInt(minutes, 10) - 2);
         dosageTime.setSeconds(0);
-        console.log(`${dosageTime}`);
         if (dosageTime > new Date()) {
             schedule.scheduleJob(dosageTime, async () => {
                 const email = `k224626@nu.edu.pk`; 
@@ -76,10 +75,19 @@ const initializeEmailScheduler = async () => {
                 const message = `Reminder for patient ${row.patientname} (Room ${row.roomnumber}):
                 Dosage of ${row.dosage_amount} ${row.formulaname} is scheduled for ${row.time}.
                     `;
+                
+                const administrationQuery = await pool.query(`
+                   SELECT administered from dosagetimes WHERE dosageid=$1 AND time=$2;
+                    `, [row.dosageid, row.time]);
+                
+                if(administrationQuery.rows[0].administered){
+                    console.log(`Dosage administered. NO email sent. Scheduling next email`);    
+                }
+                else{
+                    await sendEmail(email, subject, message);
+                    console.log(`Email sent. Scheduling next email`);
+                }
 
-                await sendEmail(email, subject, message);
-
-                console.log(`Email sent. Scheduling next email`);
                 await initializeEmailScheduler();
             });
             console.log(`Scheduled email for patient ${row.patientname} at ${dosageTime}`);

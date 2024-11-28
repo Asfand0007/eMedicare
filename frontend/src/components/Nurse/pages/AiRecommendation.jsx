@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PatientsRow from "../components/patientsComponents/PatientsRow";
+import PatientsRowAI from "../components/patientsComponents/PatientsRowAI";
 import SearchBar from "../../shared/SearchBar";
 
 const AiRecommendation = () => {
@@ -60,7 +60,7 @@ const AiRecommendation = () => {
                 <div className="sm:w-[70%] mx-auto w-[100%]">
                     {patients && patients.map((patient) => (
                         <span key={patient.mrid} className='cursor-pointer' onClick={() => setCardPatient(patient)}>
-                            <PatientsRow key={patient.mrid} patient={patient} patientCount={patientCount} setPatientCount={setPatientCount} />
+                            <PatientsRowAI key={patient.mrid} patient={patient} patientCount={patientCount} setPatientCount={setPatientCount} />
                         </span>
                     ))}
                 </div>

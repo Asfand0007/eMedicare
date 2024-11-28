@@ -9,7 +9,7 @@ const showToastMessage = () => {
 };
 
 
-const PatientsRow = ({ patient }) => {
+const PatientsRowAI = ({ patient }) => {
     const [displayModal, setDisplayModal] = useState(false);
     return (
         <div className="animate-fade-in-up bg-white rounded-lg p-5 shadow-md relative my-5 mx-5">
@@ -29,8 +29,16 @@ const PatientsRow = ({ patient }) => {
             <p className="text-sm text-gray-600">
                 <strong>Doctor ID: </strong>{patient.doctorid}
             </p>
+            <span onClick={() => setDisplayModal(true)} className="absolute text-xl top-5 right-5 rounded-full cursor-pointer">
+                <button type="button"
+                    className="text-white bg-[#3554a4] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2.5 me-2 flex items-center gap-2"
+                >
+                    AI Recommendation
+                </button>
+                {displayModal && <PatientAIModal patient={patient} setDisplayModal={setDisplayModal} />}
+            </span>
         </div>
     );
 };
 
-export default PatientsRow;
+export default PatientsRowAI;

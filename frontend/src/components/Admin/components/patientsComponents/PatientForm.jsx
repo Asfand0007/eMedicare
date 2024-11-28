@@ -234,7 +234,7 @@ const PatientForm = ({ patientCount, setPatientCount }) => {
                                             required: "Please select a doctor",
                                         })}
                                     >
-                                        <option value="">Select Room</option>
+                                        <option value="">Select Doctor</option>
                                         {doctors && doctors.map((doctor) => (
                                             <option key={doctor.employeeid} value={doctor.employeeid}>
                                                 {doctor.employeeid} - Dr. {doctor.fullname} - {doctor.speciality}
