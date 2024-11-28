@@ -16,7 +16,7 @@ const DosagesRow = ({ dosage}) => {
             <p className="text-sm text-gray-600">
                 {dosage.administered ? <><strong className='text-[#1AAC5C]'>Administered </strong></> : <strong className='text-red-500'>Pending</strong>}
             </p>
-            {dosage.administered ?
+            {dosage.nurseid && dosage.administered ?
                 <>
                     <p className='mt-2 text-md text-[#3554a4]'><strong>Administered By:</strong></p>
                     <p className="text-sm pl-2 text-gray-600">

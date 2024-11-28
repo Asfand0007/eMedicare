@@ -7,7 +7,7 @@ const getMedicines= async(req, res)=>{
     if (id) {
         params.push(id);
         if (isNaN(id)) {
-            condition = " WHERE medicineName LIKE ('%' || $1 || '%')";
+            condition = " WHERE medicineName ILIKE ('%' || $1 || '%')";
         }
         else {
             condition = " WHERE stock=$1";

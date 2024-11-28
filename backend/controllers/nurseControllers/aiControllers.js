@@ -26,7 +26,7 @@ const getAiRecommendation = async (req, res) => {
     }
 
     const prompt = `
-    I have a patient diagnosed with Cancer. Can you provide a guide on how to care for them? Keep this in mind that these instructions are for the nurses on how best to take care of the patient. Please include the following:
+    I have a patient diagnosed with ${diagnosis}. Can you provide a guide on how to care for them? Keep this in mind that these instructions are for the nurses on how best to take care of the patient. Please include the following:
         The best practices for daily care, including physical and emotional support.
         Lifestyle adjustments and dietary recommendations, if applicable.
         Possible symptoms or complications to monitor.
