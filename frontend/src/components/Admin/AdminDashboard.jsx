@@ -5,7 +5,6 @@ const AdminDashboard = () => {
     return (
         <>
             <Navbar />
-            <div className="bg-red-300 h-[72px]"></div>
             <Outlet />
         </>
     );
