@@ -5,8 +5,6 @@ import SearchBar from "../../shared/SearchBar";
 import PatientForm from "../components/patientsComponents/PatientForm";
 import PatientCard from "../components/patientsComponents/PatientCard";
 
-
-
 const PatientsRecords = () => {
     const [patients, setPatients] = useState(null);
     const [patientCount, setPatientCount] = useState(0);

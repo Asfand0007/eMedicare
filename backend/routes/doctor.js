@@ -4,6 +4,7 @@ const router = express.Router();
 
 const { getMyPatients, getPatient, addDiagnosis } = require('../controllers/doctorControllers/patientControllers')
 const { addDosage, getFormula, getDosageRecords } = require('../controllers/doctorControllers/dosageControllers');
+const { deleteDosageRecord } = require('../controllers/adminControllers/dosageControllers');
 
 router.get('/getMyPatients', getMyPatients);
 router.get('/getMyPatients/:id', getMyPatients);
@@ -14,5 +15,7 @@ router.post('/addDosage/:id', addDosage);
 router.get('/getFormula', getFormula);
 router.get('/getDosageRecords', getDosageRecords);
 router.get('/getDosageRecords/:id', getDosageRecords);
+
+router.delete('/deleteDosageRecord/:id', deleteDosageRecord);
 
 module.exports = router;
