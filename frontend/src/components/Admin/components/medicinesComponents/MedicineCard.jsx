@@ -7,15 +7,19 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const MedicineCard = ({ medicineName, setCardMedicine, setMedicineCount, medicineCount }) => {
     const [medicine, setMedicine] = useState(null);
-    const [dosages, setPatients] = useState(null);
+    const [dosages, setDosages] = useState(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
+
     useEffect(() => {
         const fetchData = async () => {
             const token = localStorage.getItem("token");
             if (!token) {
                 return navigate("/login");
             }
-            setMedicine(null);                    
+            setMedicine(null);
+            setIsLoading(true);
             try {
                 const response = await fetch("http://localhost:4000/api/admin/getMedicine/" + medicineName, {
                     method: "GET",
@@ -29,27 +33,31 @@ const MedicineCard = ({ medicineName, setCardMedicine, setMedicineCount, medicin
 
                 if (response.ok) {
                     setMedicine(json.medicine);
-                    setPatients(json.dosages);
+                    setDosages(json.dosages);
                 } else if (response.status === 401) {
                     return navigate("/unauthorized");
                 }
                 else {
                     console.error("Error fetching data:", json?.msg || "Unknown error");
+                    toast.error(json?.msg || "Error loading medicine data");
                 }
             } catch (error) {
                 console.error("Network error:", error);
+                toast.error("Network error occurred");
+            } finally {
+                setIsLoading(false);
             }
         };
 
         fetchData();
     }, [medicineName]);
 
-
     const handleDelete = async () => {
         const token = localStorage.getItem("token");
         if (!token) {
             return navigate("/login");
         }
+        setIsDeleting(true);
         try {
             const response = await fetch("http://localhost:4000/api/admin/deleteMedicine/" + medicine.medicinename, {
                 method: "DELETE",
@@ -70,16 +78,24 @@ const MedicineCard = ({ medicineName, setCardMedicine, setMedicineCount, medicin
             }
             else {
                 console.error("Error fetching data:", json?.msg || "Unknown error");
+                toast.error(json?.msg || "Failed to delete medicine");
             }
         } catch (error) {
             console.error("Network error:", error);
+            toast.error("Network error occurred");
+        } finally {
+            setIsDeleting(false);
         }
     };
 
-
     return (
         <>
-            {medicine ?
+            {isLoading ? (
+                <div className="animate-pop-up sm:w-[20rem] h-[40vh] w-full flex justify-center flex-col items-center sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
+                    <ThreeCircles color={'#3554a4'} height="6vh" />
+                    <h1 className="text-center text-[#3554a4] text-lg font-semibold">Fetching Record</h1>
+                </div>
+            ) : medicine ? (
                 <div className="animate-pop-up sm:w-[20rem] max-h-[65vh] overflow-x-auto w-full sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
                     <h5 className="mb-2 text-2xl font-bold text-gray-800 ">
                         {medicine.medicinename}
@@ -90,7 +106,7 @@ const MedicineCard = ({ medicineName, setCardMedicine, setMedicineCount, medicin
                     </p>
 
                     <h5 className="text-xl font-bold text-[#3554a4] ">Dosages:</h5>
-                    {dosages.length > 0 ? (
+                    {dosages && dosages.length > 0 ? (
                         <ul className="list-disc pl-5 text-gray-700">
                             {dosages.map((dosage, index) => (
                                 <li key={index}>
@@ -102,16 +118,30 @@ const MedicineCard = ({ medicineName, setCardMedicine, setMedicineCount, medicin
                     ) : (
                         <p className="text-gray-700">No dosages available.</p>
                     )}
-                    <span onClick={handleDelete} className="mt-4 flex justify-center items-center gap-2 bg-red-500 py-2 rounded-full cursor-pointer w-28 text-gray-100">
-                        DELETE
-                        <MdDelete />
-                    </span>
-                </div> :
-                <div className="animate-pop-up sm:w-[20rem] h-[40vh] w-full flex justify-center flex-col items-center sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
-                    <ThreeCircles color={'#3554a4'} height="6vh" />
-                    <h1 className=" text-center text-[#3554a4] text-lg font-semibold">Fetching Record</h1>
+                    <button
+                        onClick={handleDelete}
+                        disabled={isDeleting}
+                        className={`mt-4 flex justify-center items-center gap-2 py-2 rounded-full cursor-pointer w-28 text-gray-100 ${isDeleting ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'}`}
+                    >
+                        {isDeleting ? (
+                            <ThreeCircles 
+                                color="#ffffff" 
+                                height={30} 
+                                width={30} 
+                                wrapperStyle={{ display: 'inline-block' }}
+                            />
+                        ) : (
+                            <>
+                                DELETE <MdDelete />
+                            </>
+                        )}
+                    </button>
                 </div>
-            }
+            ) : (
+                <div className="animate-pop-up sm:w-[20rem] h-[40vh] w-full flex justify-center flex-col items-center sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
+                    <h1 className="text-center text-red-500 text-lg font-semibold">Failed to load medicine data</h1>
+                </div>
+            )}
         </>
     );
 };

@@ -2,10 +2,15 @@ import { MdDelete } from "react-icons/md";
 import { ThreeCircles } from "react-loader-spinner";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const NurseCard = ({ nurseID, setCardNurse, setNurseCount, nurseCount }) => {
     const [nurse, setNurse] = useState(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
+
     useEffect(() => {
         const fetchData = async () => {
             const token = localStorage.getItem("token");
@@ -14,6 +19,7 @@ const NurseCard = ({ nurseID, setCardNurse, setNurseCount, nurseCount }) => {
             }
             console.log(nurseID);
             setNurse(null);
+            setIsLoading(true);
             try {
                 const response = await fetch("http://localhost:4000/api/admin/getNurse/" + nurseID, {
                     method: "GET",
@@ -32,21 +38,25 @@ const NurseCard = ({ nurseID, setCardNurse, setNurseCount, nurseCount }) => {
                 }
                 else {
                     console.error("Error fetching data:", json?.msg || "Unknown error");
+                    toast.error(json?.msg || "Error loading nurse data");
                 }
             } catch (error) {
                 console.error("Network error:", error);
+                toast.error("Network error occurred");
+            } finally {
+                setIsLoading(false);
             }
         };
 
         fetchData();
     }, [nurseID]);
 
-
     const handleDelete = async () => {
         const token = localStorage.getItem("token");
         if (!token) {
             return navigate("/login");
         }
+        setIsDeleting(true);
         try {
             const response = await fetch("http://localhost:4000/api/admin/deleteNurse/" + nurse.employeeid, {
                 method: "DELETE",
@@ -60,22 +70,31 @@ const NurseCard = ({ nurseID, setCardNurse, setNurseCount, nurseCount }) => {
             if (response.ok) {
                 setNurseCount(nurseCount - 1);
                 setCardNurse(null);
+                toast.success("Nurse deleted successfully");
             } else if (response.status === 401) {
                 localStorage.removeItem("token");
                 return navigate("/unauthorized");
             }
             else {
                 console.error("Error fetching data:", json?.msg || "Unknown error");
+                toast.error(json?.msg || "Failed to delete nurse");
             }
         } catch (error) {
             console.error("Network error:", error);
+            toast.error("Network error occurred");
+        } finally {
+            setIsDeleting(false);
         }
     };
 
-
     return (
         <>
-            {nurse ?
+            {isLoading ? (
+                <div className="animate-pop-up sm:w-[20rem] h-[40vh] w-full flex justify-center flex-col items-center sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
+                    <ThreeCircles color={'#3554a4'} height="6vh" />
+                    <h1 className="text-center text-[#3554a4] text-lg font-semibold">Fetching Record</h1>
+                </div>
+            ) : nurse ? (
                 <div className="animate-pop-up sm:w-[20rem] max-h-[65vh] overflow-x-auto w-full sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
                     <h5 className="mb-2 text-2xl font-bold text-gray-800 ">
                         {nurse.fullname}
@@ -88,16 +107,30 @@ const NurseCard = ({ nurseID, setCardNurse, setNurseCount, nurseCount }) => {
                         <strong className="text-[#3554a4]" >End time:</strong> {nurse.endtime}
                     </p>
 
-                    <span onClick={handleDelete} className="mt-4 flex justify-center items-center gap-2 bg-red-500 py-2 rounded-full cursor-pointer w-28 text-gray-100">
-                        DELETE
-                        <MdDelete />
-                    </span>
-                </div> :
-                <div className="animate-pop-up sm:w-[20rem] h-[40vh] w-full flex justify-center flex-col items-center sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
-                    <ThreeCircles color={'#3554a4'} height="6vh" />
-                    <h1 className=" text-center text-[#3554a4] text-lg font-semibold">Fetching Record</h1>
+                    <button
+                        onClick={handleDelete}
+                        disabled={isDeleting}
+                        className={`mt-4 flex justify-center items-center gap-2 py-2 rounded-full cursor-pointer w-28 text-gray-100 ${isDeleting ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'}`}
+                    >
+                        {isDeleting ? (
+                            <ThreeCircles 
+                                color="#ffffff" 
+                                height={30} 
+                                width={30} 
+                                wrapperStyle={{ display: 'inline-block' }}
+                            />
+                        ) : (
+                            <>
+                                DELETE <MdDelete />
+                            </>
+                        )}
+                    </button>
                 </div>
-            }
+            ) : (
+                <div className="animate-pop-up sm:w-[20rem] h-[40vh] w-full flex justify-center flex-col items-center sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
+                    <h1 className="text-center text-red-500 text-lg font-semibold">Failed to load nurse data</h1>
+                </div>
+            )}
         </>
     );
 };

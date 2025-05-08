@@ -16,8 +16,8 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-initializeResetScheduler();
-initializeEmailScheduler();
+// initializeResetScheduler();
+// initializeEmailScheduler();
 
 app.get('/', (req, res) => {
   res.send('Hello World!');

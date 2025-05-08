@@ -3,23 +3,27 @@ import { useNavigate } from "react-router-dom";
 import UnadministeredDosageCard from "../components/dosagesComponents/UnadministeredDosageCard";
 import UnadministeredDosageRow from "../components/dosagesComponents/UnadministeredDosagesRow";
 import SearchBar from "../../shared/SearchBar";
-
+import { ThreeCircles } from "react-loader-spinner";
 
 const UnadministeredDosages = () => {
     const [dosages, setDosages] = useState(null);
     const [dosageCount, setDosageCount] = useState(0);
-    const [cardDosage, setCardDosage]= useState(null);
+    const [cardDosage, setCardDosage] = useState(null);
     const [searchValue, setSearchValue] = useState("");
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+
     useEffect(() => {
         const fetchData = async () => {
             const token = localStorage.getItem("token");
             if (!token) {
                 return navigate("/login");
             }
-            
+
+            setLoading(true);
+
             try {
-                const response = await fetch("http://localhost:4000/api/nurse/getUnadministeredDosages/" + searchValue, {
+                const response = await fetch("http://localhost:4000/api/nurse/getUnadministeredDosages/", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -35,17 +39,29 @@ const UnadministeredDosages = () => {
                     setCardDosage(null);
                 } else if (response.status === 401) {
                     return navigate("/unauthorized");
-                }
-                else {
+                } else {
                     console.error("Error fetching data:", json?.msg || "Unknown error");
                 }
             } catch (error) {
                 console.error("Network error:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchData();
-    }, [dosageCount, searchValue]);
+    }, [dosageCount]);
+
+    const filteredDosages = dosages?.filter((dosage) => {
+        if (!searchValue) return true;
+        const searchLower = searchValue.toLowerCase();
+        return (
+            (dosage.patientname || "").toLowerCase().includes(searchLower) ||
+            (dosage.medicinename || "").toLowerCase().includes(searchLower) ||
+            (dosage.dosage || "").toLowerCase().includes(searchLower) ||
+            (dosage.time || "").toLowerCase().includes(searchLower)
+        );
+    });
 
     return (
         <>
@@ -54,24 +70,55 @@ const UnadministeredDosages = () => {
                     <SearchBar setSearchValue={setSearchValue} />
                 </div>
                 <div className="flex sm:ml-auto ml-0 my-2">
-                    <div className="focus:outline-none text-white bg-[#1aac5c] font-medium rounded-lg text-sm px-2.5 py-2.5 me-2">Dosages: {dosageCount}</div>
+                    <div className="focus:outline-none text-white bg-[#1aac5c] font-medium rounded-lg text-sm px-2.5 py-2.5 me-2">
+                        Dosages: {dosageCount}
+                    </div>
                 </div>
             </div>
-            <div className="flex sm:flex-row flex-col-reverse">
-                <div className="md:w-[70%] w-[100%]">
-                    {dosages && dosages.map((dosage, index) => (
-                        <span key={index} className='cursor-pointer' onClick={() => setCardDosage(dosage)}>
-                            <UnadministeredDosageRow key={index} dosage={dosage} dosageCount={dosageCount} setDosageCount={setDosageCount} />
-                        </span>
-                    ))}
+
+            {loading ? (
+                <div className="h-screen sm:w-[70%] w-[100%] flex justify-center flex-col items-center">
+                    <ThreeCircles color={'#3554a4'} height="6vh" />
+                    <h1 className="text-center text-[#3554a4] text-lg font-semibold">Fetching Records</h1>
                 </div>
-                <div className="sm:mx-0 mx-auto sm:w-[30%] min-w-[22rem] flex w-full">
-                    {cardDosage && <UnadministeredDosageCard dosage={cardDosage} setCardDosage={setCardDosage} setDosageCount={setDosageCount} dosageCount={dosageCount}/>}
+            ) : (
+                <div className="flex sm:flex-row flex-col-reverse">
+                    <div className="md:w-[70%] w-[100%]">
+                        {filteredDosages && filteredDosages.length > 0 ? (
+                            filteredDosages.map((dosage, index) => (
+                                <span 
+                                    key={index} 
+                                    className="cursor-pointer" 
+                                    onClick={() => setCardDosage(dosage)}
+                                >
+                                    <UnadministeredDosageRow 
+                                        key={index} 
+                                        dosage={dosage} 
+                                        dosageCount={dosageCount} 
+                                        setDosageCount={setDosageCount} 
+                                    />
+                                </span>
+                            ))
+                        ) : (
+                            <div className="text-center text-gray-500 mt-4">
+                                {searchValue ? "No matching dosages found" : "No dosages available"}
+                            </div>
+                        )}
+                    </div>
+                    <div className="sm:mx-0 mx-auto sm:w-[30%] min-w-[22rem] flex w-full">
+                        {cardDosage && (
+                            <UnadministeredDosageCard 
+                                dosage={cardDosage} 
+                                setCardDosage={setCardDosage} 
+                                setDosageCount={setDosageCount} 
+                                dosageCount={dosageCount}
+                            />
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
         </>
     );
-}
-
+};
 
 export default UnadministeredDosages;

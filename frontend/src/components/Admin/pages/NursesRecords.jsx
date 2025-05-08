@@ -4,14 +4,16 @@ import NursesRow from "../components/nursesComponents/NursesRow";
 import SearchBar from "../../shared/SearchBar";
 import NurseForm from "../components/nursesComponents/NurseForm";
 import NurseCard from "../components/nursesComponents/NurseCard";
-
+import { ThreeCircles } from "react-loader-spinner";
 
 const NursesRecords = () => {
-    const [nurses, setNurse] = useState(null);
+    const [nurses, setNurses] = useState(null);
     const [nurseCount, setNurseCount] = useState(0);
     const [cardNurse, setCardNurse] = useState(null);
     const [searchValue, setSearchValue] = useState("");
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+
     useEffect(() => {
         const fetchData = async () => {
             const token = localStorage.getItem("token");
@@ -19,8 +21,10 @@ const NursesRecords = () => {
                 return navigate("/login");
             }
 
+            setLoading(true);
+
             try {
-                const response = await fetch("http://localhost:4000/api/admin/getNurses/" + searchValue, {
+                const response = await fetch("http://localhost:4000/api/admin/getNurses/", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -31,22 +35,29 @@ const NursesRecords = () => {
                 const json = await response.json();
 
                 if (response.ok) {
-                    setNurse(json.nurses);
+                    setNurses(json.nurses);
                     setNurseCount(json.count);
                     setCardNurse(null);
                 } else if (response.status === 401) {
                     return navigate("/unauthorized");
-                }
-                else {
+                } else {
                     console.error("Error fetching data:", json?.msg || "Unknown error");
                 }
             } catch (error) {
                 console.error("Network error:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchData();
-    }, [nurseCount, searchValue]);
+    }, [nurseCount]);
+
+    const filteredNurses = nurses?.filter((nurse) => {
+        if (!searchValue) return true;
+        const fullName = (nurse.fullname || "").toLowerCase();
+        return fullName.includes(searchValue.toLowerCase());
+    });
 
     return (
         <>
@@ -55,31 +66,57 @@ const NursesRecords = () => {
                     <SearchBar setSearchValue={setSearchValue} />
                 </div>
                 <div className="flex sm:ml-auto ml-0 my-2">
-                    <div className="focus:outline-none text-white bg-[#1aac5c] font-medium rounded-lg text-sm px-2.5 py-2.5 me-2">Nurse: {nurseCount}</div>
+                    <div className="focus:outline-none text-white bg-[#1aac5c] font-medium rounded-lg text-sm px-2.5 py-2.5 me-2">
+                        Nurses: {nurseCount}
+                    </div>
                     <NurseForm nurseCount={nurseCount} setNurseCount={setNurseCount} />
                 </div>
-            </div>
-            <div className="flex sm:flex-row flex-col-reverse">
-                <div className="sm:w-[70%] w-[100%]">
-                    {nurses && nurses.map((nurse) => (
-                        <span key={nurse.employeeid} className='cursor-pointer' onClick={() => setCardNurse(nurse)}>
-                            <NursesRow key={nurse.employeeid} nurse={nurse} nurseCount={nurseCount} setNurseCount={setNurseCount} />
-                        </span>
-                    ))}
+            </div>  
+            {loading ? (
+                <div className="animate-pop-up h-screen sm:w-[70%] w-[100%] flex justify-center flex-col items-center">
+                    <ThreeCircles color={'#3554a4'} height="6vh" />
+                    <h1 className="text-center text-[#3554a4] text-lg font-semibold">Fetching Record</h1>
                 </div>
-                <div className="mx-auto">
-                    {cardNurse &&
-                        <div className="sm:mx-0 mx-auto sm:w-[30%] min-w-[22rem] flex w-full">
-
-                            <NurseCard nurseID={cardNurse.employeeid} setCardNurse={setCardNurse} setNurseCount={setNurseCount} nurseCount={nurseCount} />
+            ) : (
+                <>
+                    <div className="flex sm:flex-row flex-col-reverse">
+                        <div className="sm:w-[70%] w-[100%]">
+                            {filteredNurses && filteredNurses.length > 0 ? (
+                                filteredNurses.map((nurse) => (
+                                    <span
+                                        key={nurse.employeeid}
+                                        className="cursor-pointer"
+                                        onClick={() => setCardNurse(nurse)}
+                                    >
+                                        <NursesRow
+                                            nurse={nurse}
+                                            nurseCount={nurseCount}
+                                            setNurseCount={setNurseCount}
+                                        />
+                                    </span>
+                                ))
+                            ) : (
+                                <div className="text-center text-gray-500 mt-4">No nurses found.</div>
+                            )}
                         </div>
-                    }
-                </div>
 
-            </div>
+                        <div className="mx-auto">
+                            {cardNurse && (
+                                <div className="sm:mx-0 mx-auto sm:w-[30%] min-w-[22rem] flex w-full">
+                                    <NurseCard
+                                        nurseID={cardNurse.employeeid}
+                                        setCardNurse={setCardNurse}
+                                        setNurseCount={setNurseCount}
+                                        nurseCount={nurseCount}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </>
+            )}
         </>
     );
-}
-
+};
 
 export default NursesRecords;

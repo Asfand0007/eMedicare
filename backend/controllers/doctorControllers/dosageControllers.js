@@ -106,7 +106,6 @@ const getDosageRecords = async (req, res) => {
                 pt.mrID;
         `;
 
-        console.log(queryText);
         const dosageQuery = await pool.query(queryText, params);
         res.status(200).json({
             count: dosageQuery.rows.length,

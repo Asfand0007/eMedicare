@@ -3,15 +3,19 @@ import { ThreeCircles } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useState } from "react";
 
 const UnadministeredDosageCard = ({ dosage, setCardDosage, setDosageCount, dosageCount }) => {
     const navigate = useNavigate();
+    const [isAdministering, setIsAdministering] = useState(false);
 
     const handleAdministration = async () => {
         const token = localStorage.getItem("token");
         if (!token) {
             return navigate("/login");
         }
+
+        setIsAdministering(true);
 
         try {
             const response = await fetch("http://localhost:4000/api/nurse/administerDosage", {
@@ -45,6 +49,8 @@ const UnadministeredDosageCard = ({ dosage, setCardDosage, setDosageCount, dosag
         } catch (error) {
             console.error("Network error:", error);
             toast.error("Network error occurred");
+        } finally {
+            setIsAdministering(false);
         }
     };
 
@@ -72,18 +78,30 @@ const UnadministeredDosageCard = ({ dosage, setCardDosage, setDosageCount, dosag
                         <br />
                         <strong className="text-red-500">Pending</strong>
                     </p>
-                    <span
+                    <button
                         onClick={handleAdministration}
-                        className="mt-4 flex justify-center items-center gap-2 bg-[#1AAC5C] py-2 rounded-full cursor-pointer text-gray-100"
+                        disabled={isAdministering}
+                        className={`mt-4 w-full flex justify-center items-center gap-2 py-2 rounded-full cursor-pointer ${isAdministering ? 'bg-gray-400' : 'bg-[#1AAC5C] hover:bg-[#168a4a]'} text-gray-100 transition-colors`}
                     >
-                        ADMINISTER DOSAGE
-                        <IoIosAddCircle className="text-3xl" />
-                    </span>
+                        {isAdministering ? (
+                            <ThreeCircles 
+                                color="#ffffff" 
+                                height={30} 
+                                width={30} 
+                                wrapperStyle={{ display: 'inline-block' }}
+                            />
+                        ) : (
+                            <>
+                                ADMINISTER DOSAGE
+                                <IoIosAddCircle className="text-3xl" />
+                            </>
+                        )}
+                    </button>
                 </div>
             ) : (
                 <div className="animate-pop-up sm:w-[20rem] h-[40vh] w-full flex justify-center flex-col items-center sm:mx-[2vw] sm:fixed mx-5 my-5 p-4 bg-white border border-gray-200 rounded-lg shadow">
                     <ThreeCircles color={'#3554a4'} height="6vh" />
-                    <h1 className=" text-center text-[#3554a4] text-lg font-semibold">Fetching Record</h1>
+                    <h1 className="text-center text-[#3554a4] text-lg font-semibold">Fetching Record</h1>
                 </div>
             )}
         </>
