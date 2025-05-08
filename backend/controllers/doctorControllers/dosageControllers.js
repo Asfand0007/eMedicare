@@ -1,3 +1,4 @@
+const { Query } = require('pg');
 const pool = require('../../db');
 
 const addDosage = async (req, res) => {
@@ -67,8 +68,9 @@ const getFormula=async(req, res)=>{
 
 const getDosageRecords = async (req, res) => {
     const { id } = req.params;
+    const params = [req.userID];
     let condition = '';
-    params = [req.userID]
+
     if (id) {
         params.push(id);
         if (isNaN(id)) {
@@ -78,31 +80,44 @@ const getDosageRecords = async (req, res) => {
             condition = " AND (pt.mrID = $2 OR d.dosageID=$2)";
         }
     }
-    
-    const dosageQuery = await pool.query(
-        `SELECT 
-            pt.mrID,
-            pt.firstName || ' ' || pt.lastName as patientName,
-            d.dosageID,
-            dt.Time,
-            dt.administered,
-            dt.nurseID,
-            n.firstName || ' ' || n.lastName as nurseName
-        FROM 
-            Patients pt
-        JOIN 
-            dosage d ON pt.mrID = d.patientmrID
-        JOIN 
-            dosageTimes dt ON dt.dosageID = d.dosageID
-        LEFT JOIN 
-            nurses n ON n.employeeID = dt.nurseID
-        WHERE pt.doctorID=$1`
-        +condition+
-        ` ORDER BY 
-            pt.mrid`,
-    params);
-    res.status(200).json({count: dosageQuery.rows.length, dosages:dosageQuery.rows});
-}
+
+    try {
+        const queryText = `
+            SELECT 
+                pt.mrID,
+                pt.firstName || ' ' || pt.lastName AS patientName,
+                d.dosageID,
+                dt.Time,
+                dt.administered,
+                dt.nurseID,
+                n.firstName || ' ' || n.lastName AS nurseName
+            FROM 
+                Patients pt
+            JOIN 
+                dosage d ON pt.mrID = d.patientmrID
+            JOIN 
+                dosageTimes dt ON dt.dosageID = d.dosageID
+            LEFT JOIN 
+                nurses n ON n.employeeID = dt.nurseID
+            WHERE 
+                pt.doctorID = $1
+                ${condition} 
+            ORDER BY 
+                pt.mrID;
+        `;
+
+        console.log(queryText);
+        const dosageQuery = await pool.query(queryText, params);
+        res.status(200).json({
+            count: dosageQuery.rows.length,
+            dosages: dosageQuery.rows,
+        });
+    } catch (error) {
+        console.error('Database Error:', error.message);
+        res.status(501).json({ msg: error.message });
+    }
+};
+
 
 const deleteDosageRecord = async (req,res) => {
     const { id } = req.params;
