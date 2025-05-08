@@ -8,6 +8,18 @@ create table admins (
   authPassword text not null
 );
 
+create table patienthistory (
+  mrID bigint primary key generated always as identity,
+  firstName text not null,
+  lastName text not null,
+  gender text,
+  dateOfBirth timestamp with time zone,
+  admissionDate timestamp with time zone not null,
+  doctorID bigint references doctor (employeeID),
+  adminID bigint references admins (adminID),
+  diagnosis text
+);
+
 create table doctors (
   employeeID bigint primary key default NEXTVAL('employeeIDGenerator'),
   firstName varchar(255) not null,
@@ -29,17 +41,6 @@ create table nurses (
   startTime time not null,
   endTime time not null,
   authPassword text not null
-CREATE OR REPLACE FUNCTION reset_administered_status()
-RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE dosageTimes
-    SET administered = false
-    WHERE administered = true;
-    RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-
 );
 
 create table rooms (
@@ -56,6 +57,18 @@ create table patients (
   dateOfBirth timestamp with time zone,
   admissionDate timestamp with time zone not null,
   roomNumber bigint references room (roomNumber),
+  doctorID bigint references doctor (employeeID),
+  adminID bigint references admins (adminID),
+  diagnosis text
+);
+
+create table patienthistory (
+  mrID bigint primary key generated always as identity,
+  firstName text not null,
+  lastName text not null,
+  gender text,
+  dateOfBirth timestamp with time zone,
+  admissionDate timestamp with time zone not null,
   doctorID bigint references doctor (employeeID),
   adminID bigint references admins (adminID),
   diagnosis text
@@ -129,35 +142,42 @@ CREATE OR REPLACE FUNCTION move_to_patienthistory()
 RETURNS TRIGGER AS $$
 BEGIN
     INSERT INTO patienthistory (
-        mrID,
-        firstName,
-        lastName,
-        gender,
-        dateOfBirth,
-        admissionDate,
-        doctorID,
-        adminID,
-        diagnosis
+        mrID, firstName, lastName, gender,
+        dateOfBirth, admissionDate, doctorID, adminID, diagnosis
     ) 
     VALUES (
-        OLD.mrID,
-        OLD.firstName,
-        OLD.lastName,
-        OLD.gender,
-        OLD.dateOfBirth,
-        OLD.admissionDate,
-        OLD.doctorID,
-        OLD.adminID,
-        OLD.diagnosis
+        OLD.mrID, OLD.firstName, OLD.lastName, OLD.gender, OLD.dateOfBirth,
+         OLD.admissionDate, OLD.doctorID,OLD.adminID, OLD.diagnosis
     );
 
     RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
 
-
 CREATE TRIGGER after_patient_delete
 AFTER DELETE ON patients
 FOR EACH ROW
 EXECUTE FUNCTION move_to_patienthistory();
 
+create table patienthistory (
+  mrID bigint primary key generated always as identity,
+  firstName text not null,
+  lastName text not null,
+  gender text,
+  dateOfBirth timestamp with time zone,
+  admissionDate timestamp with time zone not null,
+  doctorID bigint references doctor (employeeID),
+  adminID bigint references admins (adminID),
+  diagnosis text
+);
+
+
+CREATE OR REPLACE FUNCTION reset_administered_status()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE dosageTimes
+    SET administered = false
+    WHERE administered = true;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;

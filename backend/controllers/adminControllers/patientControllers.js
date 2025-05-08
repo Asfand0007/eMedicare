@@ -117,23 +117,24 @@ const addPatient = async (req, res) => {
         //transaction
         try {
             await pool.query("BEGIN");
-
             const newUser = await pool.query(
-                "INSERT INTO patients (firstName, lastName, gender, dateOfBirth, admissionDate, roomNumber, doctorID, adminID, diagnosis ) VALUES ($1, $2, $3, $4::date, $5::date, $6, $7, $8, $9) RETURNING *",
+                `INSERT INTO
+                     patients (firstName, lastName, gender, dateOfBirth,
+                      admissionDate, roomNumber, doctorID, adminID, diagnosis ) 
+                VALUES
+                     ($1, $2, $3, $4::date, $5::date, $6, $7, $8, $9)
+                RETURNING *`,
                 [firstName, lastName, gender, dateOfBirth, (new Date().toISOString().slice(0, 10)), roomNumber, doctorID, req.userID, diagnosis]
             );
-
             const updatedRoom = await pool.query(
                 "UPDATE rooms  SET occupied = occupied + 1 WHERE roomNumber = $1 AND occupied < capacity RETURNING *",
                 [roomNumber]
             );
-
             if (updatedRoom.rows.length === 0) {
                 throw new Error("Room is already at full capacity or does not exist");
             }
 
             await pool.query("COMMIT");
-
             return res.status(201).json(newUser.rows[0]);
         } catch (error) {
             await pool.query("ROLLBACK");

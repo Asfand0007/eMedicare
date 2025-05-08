@@ -120,10 +120,6 @@ const router = createBrowserRouter([
         path: 'dosages',
         element: <DoctorDosagesRecords/>,
       },
-      // {
-      //   path: 'unadministeredDosages',
-      //   element: <UnadministeredDosages/>,
-      // },
     ]
   },
   {

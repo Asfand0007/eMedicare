@@ -72,10 +72,10 @@ const getDosageRecords = async (req, res) => {
     if (id) {
         params.push(id);
         if (isNaN(id)) {
-            condition = "AND pt.firstname ILIKE ('%' || $2 || '%') OR pt.lastname ILIKE ('%' || $2 || '%')";
+            condition = " AND (pt.firstname ILIKE ('%' || $2 || '%') OR pt.lastname ILIKE ('%' || $2 || '%'))";
         }
         else {
-            condition = "AND pt.mrID = $2 OR d.dosageID=$2";
+            condition = " AND (pt.mrID = $2 OR d.dosageID=$2)";
         }
     }
     
