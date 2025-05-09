@@ -13,7 +13,6 @@ const initializeEmailScheduler = require( './scheduler/emailScheduler');
 
 const app = express();
 
-
 app.use(express.json());
 app.use(cors());
 // initializeResetScheduler();
@@ -29,6 +28,11 @@ app.use('/api/admin', VerifyJWT, authorizeRoles('admin'), adminRoutes);
 app.use('/api/doctor', VerifyJWT,authorizeRoles('doctor'), doctorRoutes);
 app.use('/api/nurse', VerifyJWT,authorizeRoles('nurse'), nurseRoutes);
 
-app.listen(process.env.PORT, () => {
-  console.log(`Example app listening on port ${process.env.PORT}`);
-});
+// Only start the server if this file is run directly
+if (require.main === module) {
+  app.listen(process.env.PORT, () => {
+    console.log(`Example app listening on port ${process.env.PORT}`);
+  });
+}
+
+module.exports = app;
