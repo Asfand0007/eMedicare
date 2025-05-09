@@ -114,8 +114,6 @@ describe('Doctor Endpoints', () => {
         .post('/api/doctor/addDiagnosis/1')
         .set('Authorization', `Bearer ${authToken}`)
         .send({
-          // Missing required diagnosis field
-          notes: 'Test notes'
         });
       
       expect(res.status).to.equal(404);
