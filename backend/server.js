@@ -15,7 +15,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-// initializeResetScheduler();
+initializeResetScheduler();
 // initializeEmailScheduler();
 
 app.get('/', (req, res) => {

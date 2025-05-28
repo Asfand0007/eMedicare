@@ -8,7 +8,7 @@ const router = express.Router()
 router.post('/', async (req, res) => {
     try {
         const { firstName, password, role } = req.body;
-        if (!role || !(role == 'doctor' || role == 'patient' || role == 'admin')) {
+        if (!role || !(role == 'doctor' || role == 'nurse' || role == 'admin')) {
             return res.status(401).json({ msg: "Invalid role" });
         }
         const userQuery = await pool.query(`SELECT * FROM ${role}s WHERE firstname=$1`, [firstName]);
